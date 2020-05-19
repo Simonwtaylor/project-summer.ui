@@ -68,7 +68,7 @@ const HomePage: React.FC<IHomePageProps> = () => {
       >
         <Grid.Row columns={2}>
           <Grid.Column>
-            <h3>List 1</h3>
+            <h3 style={{color: 'white'}}>List 1</h3>
             <div
               style={{ paddingTop: '5px', paddingBottom: '5px' }}
             >
@@ -81,7 +81,7 @@ const HomePage: React.FC<IHomePageProps> = () => {
             <BoardColumn items={items} droppableId={"droppable"} />
           </Grid.Column>
           <Grid.Column>
-            <h3>List 2</h3>
+            <h3 style={{color: 'white'}}>List 2</h3>
             <div
               style={{ paddingTop: '5px', paddingBottom: '5px' }}
             >

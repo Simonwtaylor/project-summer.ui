@@ -5,6 +5,12 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+}
+
+.app {
+  background-color: #36393f;
+  height: 100vh;
 }
 
 code {
