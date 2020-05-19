@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext } from 'react-beautiful-dnd';
 import socketIOClient from 'socket.io-client';
+import { Grid, Input, Button } from 'semantic-ui-react';
+import { BoardColumn } from '../components/board';
 
 export interface IHomePageProps {
   
@@ -28,40 +30,7 @@ const HomePage: React.FC<IHomePageProps> = () => {
     });
   }, []);
 
-  // a little function to help us with reordering the result
-  const reorder = (list: any, startIndex: any, endIndex: any): any[] => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    setLoad(true);
-    return result;
-  };
-
-  const grid = 8;
-
-  const getItemStyle = (isDragging: any, draggableStyle: any) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
-
-    // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
-
-    // styles we need to apply on draggables
-    ...draggableStyle
-  });
-
-  const getListStyle = (isDraggingOver: any) => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    padding: grid,
-    width: 250
-  });
-
-  const getList = (id: any) => id === 'droppable' ? 'items' : 'selected';
-
   const onDragEnd = (result: any) => {
-    console.log(result);
     const { source, destination, draggableId } = result;
 
     // dropped outside the list
@@ -70,20 +39,8 @@ const HomePage: React.FC<IHomePageProps> = () => {
     }
 
     if (source.droppableId === destination.droppableId) {
-      const items: any = reorder(
-        getList(source.droppableId),
-        source.index,
-        destination.index
-      );
-
-      let state: any = { items };
-
-      if (source.droppableId === 'droppable2') {
-        state = { selected: items };
-      }
-
-      setItems(state.items);
-      setSelected(state.selected);
+      // TODO: Add reordering
+      return;
     } else {
       socket.emit('updateTaskBoard', {id: draggableId, boardId: destination.droppableId });
     }
@@ -94,86 +51,50 @@ const HomePage: React.FC<IHomePageProps> = () => {
     console.log('clicked 1')
     console.log(socket);
     socket.emit('addTask', { content: boardOneText, boardId: 'droppable'});
+    setBoardOneText('');
   };
 
   const addTaskToBoardTwo = () => {
     setLoad(!load);
     console.log('clicked 2')
     socket.emit('addTask', { content: boardTwoText, boardId: 'droppable2'});
+    setBoardTwoText('');
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div style={{width: '50%', display: 'inline-block' }}>
-        <h3>List 1</h3>
-        <div>
-          <input value={boardOneText} onChange={(e: any) => setBoardOneText(e.target.value)} />
-          <button type={'button'} onClick={addTaskToBoardOne}>add</button>
-        </div>
-        <Droppable droppableId="droppable">
-          {(provided: any, snapshot: any) => (
+      <Grid
+        style={{ padding: '15px' }}
+      >
+        <Grid.Row columns={2}>
+          <Grid.Column>
+            <h3>List 1</h3>
             <div
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}>
-              {items.map((item: any, index: any) => (
-                <Draggable
-                  key={item.id}
-                  draggableId={`${item.id}`}
-                  index={index}>
-                  {(provided: any, snapshot: any) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}>
-                      {item.title}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+              style={{ paddingTop: '5px', paddingBottom: '5px' }}
+            >
+              <Input 
+                value={boardOneText}
+                onChange={(e: any) => setBoardOneText(e.target.value)}
+              />
+              <Button color={'green'} type={'button'} onClick={addTaskToBoardOne}>add</Button>
             </div>
-          )}
-        </Droppable>
-      </div>
-      <div style={{width: '50%', display: 'inline-block' }}>
-        <h3>List 2</h3>
-        <div>
-          <input value={boardTwoText} onChange={(e: any) => setBoardTwoText(e.target.value)} />
-          <button type={'button'} onClick={addTaskToBoardTwo}>add</button>
-        </div>
-        <Droppable droppableId="droppable2">
-          {(provided: any, snapshot: any) => (
+            <BoardColumn items={items} droppableId={"droppable"} />
+          </Grid.Column>
+          <Grid.Column>
+            <h3>List 2</h3>
             <div
-              ref={provided.innerRef}
-              style={getListStyle(snapshot.isDraggingOver)}>
-              {selected.map((item: any, index: any) => (
-                <Draggable
-                  key={item.id}
-                  draggableId={`${item.id}`}
-                  index={index}>
-                  {(provided: any, snapshot: any) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={getItemStyle(
-                        snapshot.isDragging,
-                        provided.draggableProps.style
-                      )}>
-                      {item.title}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
+              style={{ paddingTop: '5px', paddingBottom: '5px' }}
+            >
+              <Input 
+                value={boardTwoText}
+                onChange={(e: any) => setBoardTwoText(e.target.value)}
+              />
+              <Button color={'green'} type={'button'} onClick={addTaskToBoardTwo}>add</Button>
             </div>
-          )}
-        </Droppable>
-      </div>
+            <BoardColumn items={selected} droppableId={"droppable2"} />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </DragDropContext>
   );
 }
