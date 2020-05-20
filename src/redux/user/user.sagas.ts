@@ -6,7 +6,7 @@ import {
   getCurrentUser,
 } from "../../firebase/firebase.utils";
 import { signInSuccess, signInFailure, signOutSuccess, signOutFailure } from "./user.action";
-import { UserActionTypes } from "./user.types";
+import { UserActionTypes } from './user.types';
 
 export function* getSnapshotFromUserAuth(user: any, additionalData: any) {
   try {

@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import socketIOClient from 'socket.io-client';
 import { Grid, Input, Button } from 'semantic-ui-react';
 import { BoardColumn } from '../components/board';
 import { ITask } from '../lib';
 
 export interface IHomePageProps {
-  
+  socket?: SocketIOClient.Socket;
 }
 
-const socket: SocketIOClient.Socket = socketIOClient('http://localhost:3001');
-
-const HomePage: React.FC<IHomePageProps> = () => {
+const HomePage: React.FC<IHomePageProps> = ({
+  socket,
+}) => {
   const [load, setLoad] = React.useState(false);
   const [items, setItems] = React.useState<ITask[]>([]);
   const [selected, setSelected] = React.useState<ITask[]>([]);
@@ -20,15 +19,19 @@ const HomePage: React.FC<IHomePageProps> = () => {
 
 
   React.useEffect(() => {
-    socket.emit('getTasks');
-  }, [load])
+    if (socket) {
+      socket.emit('getTasks');
+    }
+  }, [load, socket])
 
   React.useEffect(() => {
-    socket.on('tasks', (tasks: ITask[]) => {
-      setItems(tasks.filter(a => a.boardId === 'droppable'));
-      setSelected(tasks.filter(a => a.boardId === 'droppable2'));
-    });
-  }, []);
+    if (socket) {
+      socket.on('tasks', (tasks: ITask[]) => {
+        setItems(tasks.filter(a => a.boardId === 'droppable'));
+        setSelected(tasks.filter(a => a.boardId === 'droppable2'));
+      });
+    } 
+  }, [socket]);
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -64,19 +67,19 @@ const HomePage: React.FC<IHomePageProps> = () => {
         setItems(items.filter(a => a.id === draggableId))
       }
 
-      socket.emit('updateTaskBoard', {id: draggableId, boardId: destination.droppableId });
+      socket?.emit('updateTaskBoard', {id: draggableId, boardId: destination.droppableId });
     }
   };
 
   const addTaskToBoardOne = () => {
     setLoad(!load);
-    socket.emit('addTask', { content: boardOneText, boardId: 'droppable'});
+    socket?.emit('addTask', { content: boardOneText, boardId: 'droppable'});
     setBoardOneText('');
   };
 
   const addTaskToBoardTwo = () => {
     setLoad(!load);
-    socket.emit('addTask', { content: boardTwoText, boardId: 'droppable2'});
+    socket?.emit('addTask', { content: boardTwoText, boardId: 'droppable2'});
     setBoardTwoText('');
   };
 
