@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import socketIOClient from 'socket.io-client';
 import { Grid, Input, Button } from 'semantic-ui-react';
 import { BoardColumn } from '../components/board';
+import { ITask } from '../lib';
 
 export interface IHomePageProps {
   
@@ -12,8 +13,8 @@ const socket: SocketIOClient.Socket = socketIOClient('http://localhost:3001');
 
 const HomePage: React.FC<IHomePageProps> = () => {
   const [load, setLoad] = React.useState(false);
-  const [items, setItems] = React.useState<any[]>([]);
-  const [selected, setSelected] = React.useState<any[]>([]);
+  const [items, setItems] = React.useState<ITask[]>([]);
+  const [selected, setSelected] = React.useState<ITask[]>([]);
   const [boardOneText, setBoardOneText] = React.useState<string>("");
   const [boardTwoText, setBoardTwoText] = React.useState<string>("");
 
@@ -23,14 +24,13 @@ const HomePage: React.FC<IHomePageProps> = () => {
   }, [load])
 
   React.useEffect(() => {
-    socket.on('tasks', (tasks: any[]) => {
-      console.log(tasks);
+    socket.on('tasks', (tasks: ITask[]) => {
       setItems(tasks.filter(a => a.boardId === 'droppable'));
       setSelected(tasks.filter(a => a.boardId === 'droppable2'));
     });
   }, []);
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
 
     // dropped outside the list
@@ -42,21 +42,40 @@ const HomePage: React.FC<IHomePageProps> = () => {
       // TODO: Add reordering
       return;
     } else {
+      if (destination.droppableId === "droppable") {
+        const newItem = selected.find(a => a.id === draggableId);
+        const newItems = [...items];
+
+        if (newItem) {
+          newItems.push(newItem);
+        }
+
+        setItems(newItems);
+        setSelected(selected.filter(a => a.id === draggableId))
+      } else {
+        const newItem = items.find(a => a.id === draggableId);
+        const newItems = [...selected];
+
+        if (newItem) {
+          newItems.push(newItem);
+        }
+
+        setSelected(newItems);
+        setItems(items.filter(a => a.id === draggableId))
+      }
+
       socket.emit('updateTaskBoard', {id: draggableId, boardId: destination.droppableId });
     }
   };
 
   const addTaskToBoardOne = () => {
     setLoad(!load);
-    console.log('clicked 1')
-    console.log(socket);
     socket.emit('addTask', { content: boardOneText, boardId: 'droppable'});
     setBoardOneText('');
   };
 
   const addTaskToBoardTwo = () => {
     setLoad(!load);
-    console.log('clicked 2')
     socket.emit('addTask', { content: boardTwoText, boardId: 'droppable2'});
     setBoardTwoText('');
   };
@@ -74,7 +93,7 @@ const HomePage: React.FC<IHomePageProps> = () => {
             >
               <Input 
                 value={boardOneText}
-                onChange={(e: any) => setBoardOneText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBoardOneText(e.target.value)}
               />
               <Button color={'green'} type={'button'} onClick={addTaskToBoardOne}>add</Button>
             </div>
@@ -87,7 +106,7 @@ const HomePage: React.FC<IHomePageProps> = () => {
             >
               <Input 
                 value={boardTwoText}
-                onChange={(e: any) => setBoardTwoText(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBoardTwoText(e.target.value)}
               />
               <Button color={'green'} type={'button'} onClick={addTaskToBoardTwo}>add</Button>
             </div>

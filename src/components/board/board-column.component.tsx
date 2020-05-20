@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { ITask } from '../../lib';
 
 export interface BoardColumnProps {
   droppableId: string;
-  items: any[];
+  items: ITask[];
 }
  
 const BoardColumn: React.FC<BoardColumnProps> = ({
@@ -32,35 +33,36 @@ const BoardColumn: React.FC<BoardColumnProps> = ({
   });
 
   return (
-  <Droppable droppableId={droppableId}>
-  {(provided: any, snapshot: any) => (
-    <div
-      ref={provided.innerRef}
-      style={getListStyle(snapshot.isDraggingOver)}>
-      {items.map((item: any, index: any) => (
-        <Draggable
-          key={item.id}
-          draggableId={`${item.id}`}
-          index={index}>
-          {(provided: any, snapshot: any) => (
-            <div
-              className={'card ui'}
-              ref={provided.innerRef}
-              {...provided.draggableProps}
-              {...provided.dragHandleProps}
-              style={getItemStyle(
-                snapshot.isDragging,
-                provided.draggableProps.style
-              )}>
-              {item.title}
-            </div>
-          )}
-        </Draggable>
-      ))}
-      {provided.placeholder}
-    </div>
-  )}
-</Droppable>);
+    <Droppable droppableId={droppableId}>
+      {(provided: any, snapshot: any) => (
+        <div
+          ref={provided.innerRef}
+          style={getListStyle(snapshot.isDraggingOver)}>
+          {items.map((item: ITask, index: any) => (
+            <Draggable
+              key={item.id}
+              draggableId={`${item.id}`}
+              index={index}>
+              {(provided: any, snapshot: any) => (
+                <div
+                  className={'card ui'}
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  style={getItemStyle(
+                    snapshot.isDragging,
+                    provided.draggableProps.style
+                  )}>
+                  {item.title}
+                </div>
+              )}
+            </Draggable>
+          ))}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  );
 }
  
 export default BoardColumn;
