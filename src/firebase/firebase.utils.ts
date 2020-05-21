@@ -18,7 +18,7 @@ export const createUserProfileDocument =
     if(!userAuth) return;
 
     const userRef = await Axios.get(`${process.env.REACT_APP_TASK_URL}/user/auth/${userAuth.uid}`);
-    console.log(userRef);
+    
     if(!userRef || !userRef.data || userRef.status !== 200) {
 
       const {
