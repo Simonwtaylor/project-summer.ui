@@ -17,7 +17,9 @@ export const createUserProfileDocument =
   async (userAuth: any, additionalData: any) => {
     if(!userAuth) return;
 
-    const userRef = await Axios.get(`${process.env.REACT_APP_TASK_URL}/user/auth/${userAuth.uid}`);
+    const userRef = await Axios.get(
+      `${process.env.REACT_APP_TASK_URL}/external/auth/${userAuth.uid}?apiKey=${process.env.REACT_APP_API_KEY}`
+    );
     
     if(!userRef || !userRef.data || userRef.status !== 200) {
 
