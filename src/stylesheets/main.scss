@@ -1,0 +1,21 @@
+.app {
+  .ui.labeled.icon.menu .item>.icon:not(.dropdown) {
+    font-size: 1.2em !important;
+    margin: 0 !important;
+    margin-right: 7px !important;
+    display: inline-block;
+
+  }
+
+  .ui.thin.left.sidebar {
+    width: 200px;
+
+    .item {
+      text-align: left;
+    }
+  }
+
+  .ui.visible.thin.left.sidebar~.pusher {
+    transform: translate3d(200px,0,0);
+  }
+}

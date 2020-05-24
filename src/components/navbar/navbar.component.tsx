@@ -3,23 +3,22 @@ import { Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 export interface NavbarProps {
-  
+  onMenuToggle: () => void;
 }
  
-const Navbar: React.FC<NavbarProps> = () => {
-  const onItemClick = (name: string) => {
-    console.log(name);
-  };
+const Navbar: React.FC<NavbarProps> = ({
+  onMenuToggle,
+}) => {
 
   return (
-    <Menu stackable className={'navbar'} style={{ backgroundColor: '#2f3136', borderRadius: '0px' }}>
+    <Menu stackable className={'navbar'} style={{ backgroundColor: '#2f3136', borderRadius: '0px', marginBottom: '0' }}>
       <Menu.Item
         as={ Link }
-        to='/'
-        name='home'
-        onClick={() => onItemClick('hme')}
+        to='#'
+        name=''
+        onClick={() => onMenuToggle()}
       >
-        <Icon name={'columns'} style={{ color: 'white'}} />
+        <Icon name={'bars'} style={{ color: 'white'}} />
       </Menu.Item>
     </Menu>
   );

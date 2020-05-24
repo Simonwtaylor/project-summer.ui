@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { HomePage, LoginPage } from './pages/index';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { Grid } from 'semantic-ui-react';
+import { Switch, Route, Redirect, Link } from 'react-router-dom';
+import { Grid, Sidebar, Segment, Menu, Icon } from 'semantic-ui-react';
 import { Navbar } from './components/navbar/';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -14,6 +14,16 @@ class App extends Component<any, any> {
   
   unsubscribeFromAuth: any = null;
   socket: SocketIOClient.Socket|undefined = undefined;
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      visible: true,
+    }
+
+    this.setVisible = this.setVisible.bind(this);
+    this.handleMenuToggle = this.handleMenuToggle.bind(this);
+  }
 
   componentDidMount() {
     const { setCurrentUser } = this.props;
@@ -39,6 +49,17 @@ class App extends Component<any, any> {
     });
   }
 
+  public setVisible(visible: boolean) {
+    this.setState({
+      ...this.state,
+      visible,
+    })
+  }
+
+  private handleMenuToggle() {
+    this.setVisible(!this.state.visible);
+  }
+
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
@@ -46,23 +67,48 @@ class App extends Component<any, any> {
   render() {
     return (
       <div className={'app'}>
-        <Navbar />
-        <Grid style={{ backgroundColor: '#36393f'}}>
-          <Grid.Row>
-            <Grid.Column>
-              <Switch>
-                <Route path="/login" component={LoginPage} />
-                <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
-                {
-                  (!this.props.currentUser)
-                  ?
-                    <Redirect from="/" exact to="/login" />
-                  : <Redirect from="/" exact to="/home" />
-                }
-              </Switch>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Navbar onMenuToggle={this.handleMenuToggle} />
+        <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
+          <Sidebar
+            as={Menu}
+            animation='push'
+            icon='labeled'
+            inverted
+            vertical
+            visible={this.state.visible}
+            width='thin'
+            style={{
+              backgroundColor: '#2f3136'
+            }}
+          >
+            <Menu.Item as={Link} to={'/'}>
+              <Icon
+                style={{ fontSize: '1.2em'}}
+                name='columns'
+                size={'small'}
+              />
+              Sprint
+            </Menu.Item>
+          </Sidebar>
+          <Sidebar.Pusher>
+            <Grid style={{ backgroundColor: '#36393f'}}>
+              <Grid.Row>
+                <Grid.Column>
+                  <Switch>
+                    <Route path="/login" component={LoginPage} />
+                    <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
+                    {
+                      (!this.props.currentUser)
+                      ?
+                        <Redirect from="/" exact to="/login" />
+                      : <Redirect from="/" exact to="/home" />
+                    }
+                  </Switch>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Sidebar.Pusher>
+        </Sidebar.Pushable>
       </div>
     );
   }

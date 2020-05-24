@@ -13,7 +13,6 @@ const HomePage: React.FC<IHomePageProps> = ({
 }) => {
   //const [load, setLoad] = React.useState(false);
   const [boards, setBoards] = React.useState<IBoard[]>([]);
-
   React.useEffect(() => {
     if (socket) {
       socket.emit('getBoards');
