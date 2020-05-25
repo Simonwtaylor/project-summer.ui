@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HomePage, LoginPage } from './pages/index';
+import { HomePage, LoginPage, SprintPage } from './pages/index';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import { Grid, Sidebar, Segment, Menu, Icon } from 'semantic-ui-react';
 import { Navbar } from './components/navbar/';
@@ -81,7 +81,7 @@ class App extends Component<any, any> {
               backgroundColor: '#2f3136'
             }}
           >
-            <Menu.Item as={Link} to={'/'}>
+            <Menu.Item as={Link} to={'/sprint'}>
               <Icon
                 style={{ fontSize: '1.2em'}}
                 name='columns'
@@ -96,6 +96,7 @@ class App extends Component<any, any> {
                 <Grid.Column>
                   <Switch>
                     <Route path="/login" component={LoginPage} />
+                    <Route path="/sprint" component={SprintPage} />
                     <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
                     {
                       (!this.props.currentUser)
