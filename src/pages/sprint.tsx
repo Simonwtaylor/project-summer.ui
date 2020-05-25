@@ -11,16 +11,18 @@ export interface ISprintPageProps {
 const SprintPage: React.FC<ISprintPageProps> = ({
   socket,
 }) => {
-  //const [load, setLoad] = React.useState(false);
   const [boards, setBoards] = React.useState<IBoard[]>([]);
+  
   React.useEffect(() => {
     if (socket) {
+      socket.emit('joinSprintRoom', { id: 1 });
       socket.emit('getSprint', { id: 1 });
     }
   }, [socket])
 
   React.useEffect(() => {
     socket?.on('sprint', (sprint: ISprint) => {
+      console.log("woop")
       setBoards(sprint.boards);
     });
   }, [socket]);
@@ -64,7 +66,13 @@ const SprintPage: React.FC<ISprintPageProps> = ({
         boardsToEdit.find(a => a.id === +destination.droppableId)?.tasks.push(taskToAdd);
       }
 
-      socket?.emit('updateTaskBoard', {id: draggableId, boardId: destination.droppableId });
+      socket?.emit('updateTaskBoardBySprint',
+        {
+          sprintId: 1,
+          taskId: draggableId,
+          boardId: destination.droppableId,
+        }
+      );
     }
   };
 
