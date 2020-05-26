@@ -24,7 +24,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
   React.useEffect(() => {
     socket?.on('sprint', (sprint: ISprint) => {
-      console.log("woop")
       setBoards(sprint.boards);
     });
   }, [socket]);
