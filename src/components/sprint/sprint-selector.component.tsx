@@ -29,6 +29,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({
     <SprintDropdownContainer
       socket={socket}
       name={'sprintId'}
+      placeholder={'Select Sprint'}
       onSelectSprint={handleSprintSelect}
       selectedSprint={currentSprint?.id}
     />
