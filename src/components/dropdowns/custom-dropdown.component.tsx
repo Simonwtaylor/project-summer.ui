@@ -33,7 +33,6 @@ class CustomDropdown extends React.Component<ICustomDropdownProps> {
     return (
       <Dropdown 
         fluid
-        search
         selection
         options={items}
         value={selectedItem}
