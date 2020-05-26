@@ -8,7 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import { setCurrentUser } from './redux/user/user.action';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { selectCurrentUser } from './redux/user/user.selector';
-import { SprintDropdownContainer } from './components/dropdowns';
+import { SprintSelector } from './components/sprint/index';
 import socketIOClient from 'socket.io-client';
 
 class App extends Component<any, any> {
@@ -24,7 +24,6 @@ class App extends Component<any, any> {
 
     this.setVisible = this.setVisible.bind(this);
     this.handleMenuToggle = this.handleMenuToggle.bind(this);
-    this.handleSprintSelect = this.handleSprintSelect.bind(this);
   }
 
   componentDidMount() {
@@ -62,10 +61,6 @@ class App extends Component<any, any> {
     this.setVisible(!this.state.visible);
   }
 
-  private handleSprintSelect(sprint: any) {
-    console.log('sprint', sprint);
-  }
-
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
@@ -96,11 +91,8 @@ class App extends Component<any, any> {
               Sprint
             </Menu.Item>
             <Menu.Item>
-              <SprintDropdownContainer
+              <SprintSelector
                 socket={this.socket}
-                name={'sprint'}
-                onSelectSprint={this.handleSprintSelect}
-                selectedSprint={''}
               />
             </Menu.Item>
           </Sidebar>
