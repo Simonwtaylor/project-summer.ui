@@ -4,12 +4,11 @@ import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
-import { ISprint } from '../../lib';
 
 export interface INavSidebarProps {
   socket?: SocketIOClient.Socket;
   visible: boolean;
-  onSprintChange: (sprint: ISprint|undefined) => void;
+  onSprintChange: (prevSprintId: number) => void;
 }
  
 const NavSidebar: React.FC<INavSidebarProps> = ({
@@ -34,7 +33,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
               marginLeft: '10px',
               cursor: 'pointer'
             }}
-            onClick={() => onSprintChange(undefined)}
+            onClick={() => onSprintChange(+currentSprint.id)}
           />
         </div>
       );

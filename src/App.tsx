@@ -11,7 +11,6 @@ import { selectCurrentUser } from './redux/user/user.selector';
 import socketIOClient from 'socket.io-client';
 import NavSidebar from './components/sidebar/nav-sidebar.component';
 import { setCurrentSprint } from './redux/sprint/sprint.action';
-import { ISprint } from './lib/types';
 
 class App extends Component<any, any> {
   
@@ -64,8 +63,9 @@ class App extends Component<any, any> {
     this.setVisible(!this.state.visible);
   }
 
-  private handleSprintChange(sprint: ISprint | undefined) {
-    this.props.setCurrentSprint(sprint);
+  private handleSprintChange(prevSprintId: number) {
+    this.props.setCurrentSprint(undefined);
+    this.socket?.emit('exitSprintRoom', { id: prevSprintId });
   }
 
   componentWillUnmount() {
