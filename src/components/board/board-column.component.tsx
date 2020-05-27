@@ -1,17 +1,25 @@
 import * as React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ITask } from '../../lib';
+import { Grid, Icon, Input } from 'semantic-ui-react';
 
-export interface BoardColumnProps {
+export interface IBoardColumnProps {
+  name: string;
   droppableId: string;
   items: ITask[];
+  onAddNewTask: (title: string, boardId: number) => void;
 }
  
-const BoardColumn: React.FC<BoardColumnProps> = ({
+const BoardColumn: React.FC<IBoardColumnProps> = ({
+  name,
   droppableId,
   items,
+  onAddNewTask,
 }) => {
 
+  const [newTask, setNewTask] = React.useState<boolean>(false);
+  const [newTaskTitle, setNewTaskTitle] = React.useState<string>('');
+  
   const getListStyle = (isDraggingOver: boolean) => ({
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     border: isDraggingOver ? '1px dotted grey' : '',
@@ -32,36 +40,108 @@ const BoardColumn: React.FC<BoardColumnProps> = ({
     ...draggableStyle
   });
 
+  const getNewTaskInput = () => {
+    if (newTask) {
+      return (
+        <Input
+          value={newTaskTitle}
+          onChange={
+            (e: React.ChangeEvent<HTMLInputElement>) => setNewTaskTitle(e.target.value)
+          }
+        />
+      )
+    }
+
+    return <></>;
+  };
+
+  const onSaveClick = () => {
+    onAddNewTask(newTaskTitle, +droppableId);
+    setNewTaskTitle('');
+    setNewTask(false);
+  };
+  
+  const onCancelClick = () => {
+    setNewTaskTitle('');
+    setNewTask(false);
+  }
+
+  const getColumnActions = () => {
+    if (!newTask) {
+      return (
+        <Icon
+          name={'plus'}
+          style={{
+            cursor: 'pointer',
+            color: 'green',
+            marginLeft: '10px'
+          }}
+          onClick={() => setNewTask(!newTask)}
+        />
+      )
+    }
+
+    return (
+      <>
+        <Icon
+          name={'save'}
+          style={{
+            cursor: 'pointer',
+            color: 'green',
+            marginLeft: '10px'
+          }}
+          onClick={onSaveClick}
+        />
+        <Icon
+          name={'cancel'}
+          style={{
+            cursor: 'pointer',
+            color: 'red',
+            marginLeft: '10px'
+          }}
+          onClick={onCancelClick}
+        />
+      </>
+    )
+  };
+
   return (
-    <Droppable droppableId={droppableId}>
-      {(provided: any, snapshot: any) => (
-        <div
-          ref={provided.innerRef}
-          style={getListStyle(snapshot.isDraggingOver)}>
-          {items.map((item: ITask, index: any) => (
-            <Draggable
-              key={item.id}
-              draggableId={`${item.id}`}
-              index={index}>
-              {(provided: any, snapshot: any) => (
-                <div
-                  className={'card ui'}
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  style={getItemStyle(
-                    snapshot.isDragging,
-                    provided.draggableProps.style
-                  )}>
-                  {item.title}
-                </div>
-              )}
-            </Draggable>
-          ))}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+    <Grid.Column key={`sprintboard${droppableId}`}>
+      <div>
+        <span style={{color: 'white'}}>{name}</span>
+        {getColumnActions()}
+      </div>
+      {getNewTaskInput()}
+      <Droppable droppableId={droppableId}>
+        {(provided: any, snapshot: any) => (
+          <div
+            ref={provided.innerRef}
+            style={getListStyle(snapshot.isDraggingOver)}>
+            {items.map((item: ITask, index: any) => (
+              <Draggable
+                key={item.id}
+                draggableId={`${item.id}`}
+                index={index}>
+                {(provided: any, snapshot: any) => (
+                  <div
+                    className={'card ui'}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={getItemStyle(
+                      snapshot.isDragging,
+                      provided.draggableProps.style
+                    )}>
+                    {item.title}
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </Grid.Column>
   );
 }
  

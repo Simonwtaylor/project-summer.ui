@@ -14,7 +14,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   socket,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
-  
+
   React.useEffect(() => {
     if (socket) {
       socket.emit('joinSprintRoom', { id: sprintId });
@@ -69,12 +69,19 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
       socket?.emit('updateTaskBoardBySprint',
         {
-          sprintId: 1,
+          sprintId: sprintId,
           taskId: draggableId,
           boardId: destination.droppableId,
         }
       );
     }
+  };
+
+  const handleAddNewTask = (
+    title: string,
+    boardId: number,
+  ) => {
+    socket?.emit('addTask', { sprintId, content: title, boardId: `${boardId}`});
   };
 
   const getBoardContent = () => {
@@ -84,10 +91,13 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
     return boards.map(({ tasks: boardTasks, name, id }: any) => {
       return (
-        <Grid.Column key={`sprintboard${id}`}>
-          <h3 style={{color: 'white'}}>{name}</h3>
-          <BoardColumn items={boardTasks} droppableId={`${id}`} key={`boardid${id}`} />
-        </Grid.Column>
+        <BoardColumn
+          name={name}
+          items={boardTasks}
+          droppableId={`${id}`}
+          key={`boardid${id}`}
+          onAddNewTask={handleAddNewTask}
+        />
       )
     }) 
   }
@@ -98,9 +108,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
         style={{ padding: '15px' }}
       >
         <Grid.Row columns={4}>
-          {
-            getBoardContent()
-          }
+          {getBoardContent()}
         </Grid.Row>
       </Grid>
     </DragDropContext>
