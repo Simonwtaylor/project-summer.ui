@@ -10,6 +10,8 @@ import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { selectCurrentUser } from './redux/user/user.selector';
 import socketIOClient from 'socket.io-client';
 import NavSidebar from './components/sidebar/nav-sidebar.component';
+import { setCurrentSprint } from './redux/sprint/sprint.action';
+import { ISprint } from './lib/types';
 
 class App extends Component<any, any> {
   
@@ -24,6 +26,7 @@ class App extends Component<any, any> {
 
     this.setVisible = this.setVisible.bind(this);
     this.handleMenuToggle = this.handleMenuToggle.bind(this);
+    this.handleSprintChange = this.handleSprintChange.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +64,10 @@ class App extends Component<any, any> {
     this.setVisible(!this.state.visible);
   }
 
+  private handleSprintChange(sprint: ISprint | undefined) {
+    this.props.setCurrentSprint(sprint);
+  }
+
   componentWillUnmount() {
     this.unsubscribeFromAuth();
   }
@@ -73,6 +80,7 @@ class App extends Component<any, any> {
           <NavSidebar
             visible={this.state.visible}
             socket={this.socket}
+            onSprintChange={this.handleSprintChange}
           />
           <Sidebar.Pusher>
             <Grid style={{ backgroundColor: '#36393f'}}>
@@ -106,6 +114,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch: any) => ({
   setCurrentUser: (user: any) => dispatch(setCurrentUser(user)),
+  setCurrentSprint: (sprint: any) => dispatch(setCurrentSprint(sprint))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

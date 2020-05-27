@@ -2,16 +2,51 @@ import * as React from 'react';
 import { Sidebar, Menu, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
+import { useSelector } from 'react-redux';
+import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
+import { ISprint } from '../../lib';
 
 export interface INavSidebarProps {
   socket?: SocketIOClient.Socket;
   visible: boolean;
+  onSprintChange: (sprint: ISprint|undefined) => void;
 }
  
 const NavSidebar: React.FC<INavSidebarProps> = ({
   socket,
   visible,
+  onSprintChange,
 }) => {
+
+  const currentSprint = useSelector(selectCurrentSprint);
+
+  const getSprintSection = () => {
+    if (currentSprint) {
+      return (
+        <div>
+          <span>
+            {currentSprint.name}
+          </span>
+          <Icon
+            name={'exchange'}
+            style={{ 
+              fontSize: '1.2em',
+              marginLeft: '10px',
+              cursor: 'pointer'
+            }}
+            onClick={() => onSprintChange(undefined)}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <SprintSelector
+        socket={socket}
+      />
+    )
+  };
+
   return (
     <Sidebar
       as={Menu}
@@ -24,19 +59,17 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       style={{
         backgroundColor: '#2f3136'
       }}
-    >
+    > 
+      <Menu.Item>
+        {getSprintSection()}
+      </Menu.Item>
       <Menu.Item as={Link} to={'/sprint'}>
         <Icon
           style={{ fontSize: '1.2em'}}
           name='columns'
           size={'small'}
         />
-        Sprint
-      </Menu.Item>
-      <Menu.Item>
-        <SprintSelector
-          socket={socket}
-        />
+        Boards
       </Menu.Item>
     </Sidebar>
   );
