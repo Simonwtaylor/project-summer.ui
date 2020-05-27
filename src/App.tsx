@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { HomePage, LoginPage, SprintPage } from './pages/index';
-import { Switch, Route, Redirect, Link } from 'react-router-dom';
-import { Grid, Sidebar, Segment, Menu, Icon } from 'semantic-ui-react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { Grid, Sidebar, Segment } from 'semantic-ui-react';
 import { Navbar } from './components/navbar/';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { setCurrentUser } from './redux/user/user.action';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import { selectCurrentUser } from './redux/user/user.selector';
-import { SprintSelector } from './components/sprint/index';
 import socketIOClient from 'socket.io-client';
+import NavSidebar from './components/sidebar/nav-sidebar.component';
 
 class App extends Component<any, any> {
   
@@ -70,32 +70,10 @@ class App extends Component<any, any> {
       <div className={'app'}>
         <Navbar onMenuToggle={this.handleMenuToggle} />
         <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
-          <Sidebar
-            as={Menu}
-            animation='push'
-            icon='labeled'
-            inverted
-            vertical
+          <NavSidebar
             visible={this.state.visible}
-            width='thin'
-            style={{
-              backgroundColor: '#2f3136'
-            }}
-          >
-            <Menu.Item as={Link} to={'/sprint'}>
-              <Icon
-                style={{ fontSize: '1.2em'}}
-                name='columns'
-                size={'small'}
-              />
-              Sprint
-            </Menu.Item>
-            <Menu.Item>
-              <SprintSelector
-                socket={this.socket}
-              />
-            </Menu.Item>
-          </Sidebar>
+            socket={this.socket}
+          />
           <Sidebar.Pusher>
             <Grid style={{ backgroundColor: '#36393f'}}>
               <Grid.Row>
