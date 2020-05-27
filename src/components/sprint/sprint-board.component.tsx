@@ -3,8 +3,10 @@ import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { Grid } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
 import { ISprint, IBoard } from '../../lib';
+import { useParams, withRouter, RouteComponentProps } from 'react-router-dom';
+import { TaskModalContainer } from '../task';
 
-export interface SprintBoardProps {
+export interface SprintBoardProps extends RouteComponentProps {
   sprintId: number;
   socket?: SocketIOClient.Socket;
 }
@@ -12,8 +14,14 @@ export interface SprintBoardProps {
 const SprintBoard: React.FC<SprintBoardProps> = ({
   sprintId,
   socket,
+  history,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
+  const { id } = useParams();
+
+  if (id) {
+    console.log(`ID OF TASK ${id}`)
+  }
 
   React.useEffect(() => {
     if (socket) {
@@ -100,13 +108,26 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
         />
       )
     }) 
-  }
+  };
+
+  const getModal = () => {
+    if (id) {
+      return (
+       <TaskModalContainer
+          id={+id}
+          socket={socket}
+       />
+      )
+    }
+    return <></>;
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Grid
         style={{ padding: '15px' }}
       >
+        {getModal()}
         <Grid.Row columns={4}>
           {getBoardContent()}
         </Grid.Row>
@@ -115,4 +136,4 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   );
 }
  
-export default SprintBoard;
+export default withRouter(SprintBoard);

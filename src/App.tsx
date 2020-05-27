@@ -88,6 +88,7 @@ class App extends Component<any, any> {
                 <Grid.Column>
                   <Switch>
                     <Route path="/login" component={LoginPage} />
+                    <Route path="/sprint/:id" render={() => <SprintPage socket={this.socket} />}  />
                     <Route path="/sprint" render={() => <SprintPage socket={this.socket} />}  />
                     <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
                     {

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ITask } from '../../lib';
 import { Grid, Icon, Input } from 'semantic-ui-react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-export interface IBoardColumnProps {
+export interface IBoardColumnProps extends RouteComponentProps {
   name: string;
   droppableId: string;
   items: ITask[];
@@ -15,6 +16,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
   droppableId,
   items,
   onAddNewTask,
+  history,
 }) => {
 
   const [newTask, setNewTask] = React.useState<boolean>(false);
@@ -124,6 +126,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                 index={index}>
                 {(provided: any, snapshot: any) => (
                   <div
+                    onClick={() => history.push(`/sprint/${item.id}`)}
                     className={'card ui'}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -145,4 +148,4 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
   );
 }
  
-export default BoardColumn;
+export default withRouter(BoardColumn);
