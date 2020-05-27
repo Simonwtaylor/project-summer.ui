@@ -13,17 +13,17 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   socket,
   history,
 }) => {
-  const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined)
+  const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined);
+
   React.useEffect(() => {
     if (socket) {
       socket.emit('joinTaskRoom', { id });
       socket.emit('getTask', { id });
     }
-  }, [socket, id])
+  }, [socket, id]);
 
   React.useEffect(() => {
     socket?.on('task', (task: ITask) => {
-      console.log(task);
       setModalTask(task);
     });
   }, [socket]);
@@ -35,12 +35,13 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   const handleModalClose = () => {
     socket?.emit('exitTaskRoom', { id });
     history.push('/sprint');
-  }
+  };
 
   return (
     <TaskModal
       task={modalTask}
       onModalClose={handleModalClose}
+      socket={socket}
     />
   )
 }

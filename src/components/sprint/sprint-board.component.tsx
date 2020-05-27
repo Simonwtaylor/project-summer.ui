@@ -19,10 +19,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   const [boards, setBoards] = React.useState<IBoard[]>([]);
   const { id } = useParams();
 
-  if (id) {
-    console.log(`ID OF TASK ${id}`)
-  }
-
   React.useEffect(() => {
     if (socket) {
       socket.emit('joinSprintRoom', { id: sprintId });
@@ -89,7 +85,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     title: string,
     boardId: number,
   ) => {
-    socket?.emit('addTask', { sprintId, content: title, boardId: `${boardId}`});
+    socket?.emit('addTask', { sprintId, newTask: { title, boardId: `${boardId}`} });
   };
 
   const getBoardContent = () => {
@@ -97,7 +93,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
       return (<h1>Please select a sprint</h1>);
     }
 
-    return boards.map(({ tasks: boardTasks, name, id }: any) => {
+    return boards.map(({ tasks: boardTasks, name, id }: IBoard) => {
       return (
         <BoardColumn
           name={name}
