@@ -6,12 +6,14 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 export interface ITaskModalContainerProps extends RouteComponentProps {
   id: number;
   socket?: SocketIOClient.Socket;
+  onClose: () => void;
 }
  
 const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   id,
   socket,
   history,
+  onClose,
 }) => {
   const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined);
 
@@ -34,6 +36,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   const handleModalClose = () => {
     socket?.emit('exitTaskRoom', { id });
+    onClose();
     history.push('/sprint');
   };
 
@@ -45,6 +48,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   const handleUserChange = (user: any) => {
     console.log(`task ${id} user changed to ${user.displayName}`);
     socket?.emit('updateTaskUser', { taskId: id, userId: +user.id });
+  };
+
+  const handleTitleChange = (title: string) => {
+    console.log(`task ${id} title changed to ${title}`)
+    socket?.emit('updateTaskTitle', { taskId: id, title });
   };
 
   return (
@@ -59,6 +67,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       socket={socket}
       onDescriptionChange={handleDescriptionChange}
       onUserChange={handleUserChange}
+      onTitleChange={handleTitleChange}
     />
   )
 }

@@ -14,6 +14,7 @@ export interface ITaskModalProps {
   socket?: SocketIOClient.Socket;
   onDescriptionChange: (description: string) => void;
   onUserChange: (user: any) => void;
+  onTitleChange: (title: string) => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
@@ -26,10 +27,13 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   onModalClose,
   socket,
   onDescriptionChange,
-  onUserChange
+  onUserChange,
+  onTitleChange,
 }) => {
   const [desc, setDescription] = React.useState(description);
+  const [newTitle, setNewTitle] = React.useState(title);
   const [descFocus, setDescFocus] = React.useState<boolean>(false);
+  const [titleFocus, setTitleFocus] = React.useState<boolean>(false);
   const [changeUser, setChangeUser] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -38,11 +42,21 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     }
   }, [description, descFocus]);
 
+  React.useEffect(() => {
+    if (!titleFocus) {
+      setNewTitle(title)
+    }
+  }, [title, titleFocus]);
+
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
     onDescriptionChange(e.target.value);
   };
 
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTitle(e.target.value);
+    onTitleChange(e.target.value);
+  };
   const getUserSection = () => {
     if (!user || changeUser) {
       return (
@@ -79,14 +93,18 @@ const TaskModal: React.FC<ITaskModalProps> = ({
             }
           />)
         )}
-        <span
+        <Input
           style={{
             display: 'inline-block',
-            marginLeft: '30px'
+            marginLeft: '30px',
+            border: 'none'
           }}
-        >
-          {title}
-        </span>
+          onChange={handleTitleChange}
+          onFocus={() => setTitleFocus(true)}
+          onBlur={() => setTitleFocus(false)}
+          value={newTitle}
+          transparent={true}
+        />
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>

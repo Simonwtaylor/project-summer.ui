@@ -106,12 +106,17 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     }) 
   };
 
+  const handleTaskModalClose = () => {
+    socket?.emit('getSprint', { id: sprintId });
+  };
+
   const getModal = () => {
     if (id) {
       return (
        <TaskModalContainer
           id={+id}
           socket={socket}
+          onClose={handleTaskModalClose}
        />
       )
     }
