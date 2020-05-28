@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Modal, Header, Input } from 'semantic-ui-react';
+import { Modal, Input, Popup, Image } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
+import { IUser } from '../../lib';
 
 export interface ITaskModalProps {
   id: string;
@@ -8,9 +9,11 @@ export interface ITaskModalProps {
   boardId?: string;
   description?: string;
   dateAdded?: Date;
+  user?: IUser;
   onModalClose: () => void;
   socket?: SocketIOClient.Socket;
   onDescriptionChange: (description: string) => void;
+  onUserChange: (user: any) => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
@@ -19,12 +22,15 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   boardId,
   description,
   dateAdded,
+  user,
   onModalClose,
   socket,
   onDescriptionChange,
+  onUserChange
 }) => {
   const [desc, setDescription] = React.useState(description);
   const [descFocus, setDescFocus] = React.useState<boolean>(false);
+  const [changeUser, setChangeUser] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (!descFocus) {
@@ -37,24 +43,62 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     onDescriptionChange(e.target.value);
   };
 
+  const getUserSection = () => {
+    if (!user || changeUser) {
+      return (
+        <UserDropdownContainer
+          name={'userId'}
+          onSelectUser={onUserChange}
+          socket={socket}
+          selectedUser={user?.id}
+        />
+      )
+    }
+
+    return <></>;
+  };
+
   return (
     <Modal centered={false} open={true} onClose={() => onModalClose()}>
       <Modal.Header>
-        {title}
+        {(user && (
+          <Popup
+            content={user.displayName}
+            key={`taskuserphoto`}
+            trigger={
+              <Image
+                src={user.photoURL}
+                circular={true}
+                onClick={() => setChangeUser(!changeUser)}
+                size={'tiny'}
+                style={{
+                  width: '45px',
+                  display: 'inline-block'
+                }}
+              />
+            }
+          />)
+        )}
+        <span
+          style={{
+            display: 'inline-block',
+            marginLeft: '30px'
+          }}
+        >
+          {title}
+        </span>
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>
-          <Header>Default Profile Image</Header>
-          <UserDropdownContainer
-            name={'userId'}
-            onSelectUser={(user: any) => console.log(user)}
-            socket={socket}
-          />
+          {getUserSection()}
           <Input
             value={desc}
             onChange={handleDescriptionChange}
             onFocus={() => setDescFocus(true)}
             onBlur={() => setDescFocus(false)}
+            style={{
+              width: '100%'
+            }}
           />
         </Modal.Description>
       </Modal.Content>

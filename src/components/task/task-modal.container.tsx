@@ -24,8 +24,6 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   React.useEffect(() => {
     socket?.on('task', (task: ITask) => {
-      console.log('update to task')
-      console.log(task)
       setModalTask(task);
     });
   }, [socket, modalTask]);
@@ -44,6 +42,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     socket?.emit('updateTaskDescription', { taskId: id, description });
   };
 
+  const handleUserChange = (user: any) => {
+    console.log(`task ${id} user changed to ${user.displayName}`);
+    socket?.emit('updateTaskUser', { taskId: id, userId: +user.id });
+  };
+
   return (
     <TaskModal
       id={modalTask.id}
@@ -51,9 +54,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       title={modalTask.title}
       dateAdded={modalTask.dateAdded}
       boardId={modalTask.boardId}
+      user={modalTask.user}
       onModalClose={handleModalClose}
       socket={socket}
       onDescriptionChange={handleDescriptionChange}
+      onUserChange={handleUserChange}
     />
   )
 }
