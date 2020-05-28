@@ -1,23 +1,46 @@
 import * as React from 'react';
-import { Modal, Header } from 'semantic-ui-react';
-import { ITask } from '../../lib/types'
+import { Modal, Header, Input } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
 
 export interface ITaskModalProps {
-  task: ITask;
+  id: string;
+  title: string;
+  boardId?: string;
+  description?: string;
+  dateAdded?: Date;
   onModalClose: () => void;
   socket?: SocketIOClient.Socket;
+  onDescriptionChange: (description: string) => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
-  task,
+  id,
+  title,
+  boardId,
+  description,
+  dateAdded,
   onModalClose,
-  socket
+  socket,
+  onDescriptionChange,
 }) => {
+  const [desc, setDescription] = React.useState(description);
+  const [descFocus, setDescFocus] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    if (!descFocus) {
+      setDescription(description)
+    }
+  }, [description, descFocus]);
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDescription(e.target.value);
+    onDescriptionChange(e.target.value);
+  };
+
   return (
     <Modal centered={false} open={true} onClose={() => onModalClose()}>
       <Modal.Header>
-        {task.title}
+        {title}
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>
@@ -27,7 +50,12 @@ const TaskModal: React.FC<ITaskModalProps> = ({
             onSelectUser={(user: any) => console.log(user)}
             socket={socket}
           />
-          <p>Is it okay to use this photo?</p>
+          <Input
+            value={desc}
+            onChange={handleDescriptionChange}
+            onFocus={() => setDescFocus(true)}
+            onBlur={() => setDescFocus(false)}
+          />
         </Modal.Description>
       </Modal.Content>
     </Modal>

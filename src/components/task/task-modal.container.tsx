@@ -24,9 +24,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   React.useEffect(() => {
     socket?.on('task', (task: ITask) => {
+      console.log('update to task')
+      console.log(task)
       setModalTask(task);
     });
-  }, [socket]);
+  }, [socket, modalTask]);
 
   if (!modalTask) {
     return <span>loading...</span>
@@ -37,11 +39,21 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     history.push('/sprint');
   };
 
+  const handleDescriptionChange = (description: string) => {
+    console.log(`task ${id} description changed to ${description}`)
+    socket?.emit('updateTaskDescription', { taskId: id, description });
+  };
+
   return (
     <TaskModal
-      task={modalTask}
+      id={modalTask.id}
+      description={modalTask.description}
+      title={modalTask.title}
+      dateAdded={modalTask.dateAdded}
+      boardId={modalTask.boardId}
       onModalClose={handleModalClose}
       socket={socket}
+      onDescriptionChange={handleDescriptionChange}
     />
   )
 }
