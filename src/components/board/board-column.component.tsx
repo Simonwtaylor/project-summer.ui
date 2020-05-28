@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ITask } from '../../lib';
-import { Grid, Icon, Input } from 'semantic-ui-react';
+import { Grid, Icon, Input, Popup, Image } from 'semantic-ui-react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 export interface IBoardColumnProps extends RouteComponentProps {
@@ -135,7 +135,41 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                       snapshot.isDragging,
                       provided.draggableProps.style
                     )}>
-                    {item.title}
+                      <Grid>
+                        <Grid.Row columns={2}>
+                          <Grid.Column
+                            computer={4}
+                          >
+                            {(item.user && (
+                              <Popup
+                                content={item.user.displayName}
+                                key={`taskuserphoto`}
+                                trigger={
+                                  <Image
+                                    src={item.user.photoURL}
+                                    circular={true}
+                                    size={'tiny'}
+                                    style={{
+                                      width: '30px',
+                                    }}
+                                  />
+                                }
+                              />)
+                            )}
+                          </Grid.Column>
+                          <Grid.Column
+                            computer={12}
+                          >
+                            <span
+                              style={{
+                                verticalAlign: 'center'
+                              }}
+                            >
+                              {item.title}
+                            </span>
+                          </Grid.Column>
+                        </Grid.Row>
+                      </Grid>
                   </div>
                 )}
               </Draggable>
