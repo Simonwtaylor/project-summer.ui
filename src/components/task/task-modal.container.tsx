@@ -64,6 +64,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     socket?.emit('addComment', { taskId: id, content, uid: currentUser.uid });
   };
 
+  const handleStoryPointsChange = (storyPoints: number) => {
+    console.log(`task ${id} story points changed to ${storyPoints}`)
+    socket?.emit('updateTaskStoryPoints', { taskId: id, storyPoints });
+  };
+
   return (
     <TaskModal
       {...modalTask}
@@ -73,6 +78,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       onUserChange={handleUserChange}
       onTitleChange={handleTitleChange}
       onCommentAdd={handleCommentAdd}
+      onStoryPointsChange={handleStoryPointsChange}
     />
   )
 }

@@ -10,6 +10,7 @@ export interface ITaskModalProps {
   boardId?: string;
   description?: string;
   dateAdded?: Date;
+  storyPoints?: number;
   user?: IUser;
   comments: IComment[];
   onModalClose: () => void;
@@ -18,6 +19,7 @@ export interface ITaskModalProps {
   onUserChange: (user: any) => void;
   onTitleChange: (title: string) => void;
   onCommentAdd: (content: string) => void;
+  onStoryPointsChange: (storyPoints: number) => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
@@ -26,6 +28,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   boardId,
   description,
   dateAdded,
+  storyPoints,
   user,
   comments,
   onModalClose,
@@ -34,12 +37,15 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   onUserChange,
   onTitleChange,
   onCommentAdd,
+  onStoryPointsChange,
 }) => {
   const [desc, setDescription] = React.useState(description);
   const [newTitle, setNewTitle] = React.useState(title);
+  const [newStoryPoints, setNewStoryPoints] = React.useState(storyPoints);
   const [content, setContent] = React.useState('');
   const [descFocus, setDescFocus] = React.useState<boolean>(false);
   const [titleFocus, setTitleFocus] = React.useState<boolean>(false);
+  const [storyFocus, setStoryFocus] = React.useState<boolean>(false);
   const [changeUser, setChangeUser] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -54,6 +60,12 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     }
   }, [title, titleFocus]);
 
+  React.useEffect(() => {
+    if (!storyFocus) {
+      setNewStoryPoints(storyPoints)
+    }
+  }, [storyPoints, storyFocus]);
+
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
     onDescriptionChange(e.target.value);
@@ -64,10 +76,15 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     onTitleChange(e.target.value);
   };
 
+  const handleStoryPointsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewStoryPoints(+e.target.value);
+    onStoryPointsChange(+e.target.value);
+  };
+
   const handleCommentSubmit = () => {
     onCommentAdd(content);
     setContent('');
-  }
+  };
 
   const getUserSection = () => {
     if (!user || changeUser) {
@@ -144,7 +161,17 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                 />
               </Grid.Column>
               <Grid.Column>
-                
+                <Input
+                  value={newStoryPoints}
+                  onChange={handleStoryPointsChange}
+                  onFocus={() => setStoryFocus(true)}
+                  onBlur={() => setStoryFocus(false)}
+                  placeholder={'Story Points'}
+                  type={'number'}
+                  style={{
+                    width: '100%'
+                  }}
+                />
               </Grid.Column>
             </Grid.Row>
           </Grid>

@@ -7,6 +7,7 @@ export interface ITask {
   boardId?: string;
   description?: string;
   dateAdded?: Date;
+  storyPoints?: number;
   user?: IUser;
   comments: IComment[];
 }
