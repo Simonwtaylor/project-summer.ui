@@ -2,6 +2,8 @@ import React from 'react';
 import { default as TaskModal } from './task-modal.component';
 import { ITask } from '../../lib/types';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 export interface ITaskModalContainerProps extends RouteComponentProps {
   id: number;
@@ -15,6 +17,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   history,
   onClose,
 }) => {
+  const currentUser = useSelector(selectCurrentUser);
   const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined);
 
   React.useEffect(() => {
@@ -26,6 +29,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   React.useEffect(() => {
     socket?.on('task', (task: ITask) => {
+      console.log(task);
       setModalTask(task);
     });
   }, [socket, modalTask]);
@@ -55,19 +59,20 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     socket?.emit('updateTaskTitle', { taskId: id, title });
   };
 
+  const handleCommentAdd = (content: string) => {
+    console.log(`task ${id} title has comment added to`)
+    socket?.emit('addComment', { taskId: id, content, uid: currentUser.uid });
+  };
+
   return (
     <TaskModal
-      id={modalTask.id}
-      description={modalTask.description}
-      title={modalTask.title}
-      dateAdded={modalTask.dateAdded}
-      boardId={modalTask.boardId}
-      user={modalTask.user}
+      {...modalTask}
       onModalClose={handleModalClose}
       socket={socket}
       onDescriptionChange={handleDescriptionChange}
       onUserChange={handleUserChange}
       onTitleChange={handleTitleChange}
+      onCommentAdd={handleCommentAdd}
     />
   )
 }

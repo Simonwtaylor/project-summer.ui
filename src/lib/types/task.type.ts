@@ -1,4 +1,5 @@
 import { IUser } from "./user.type";
+import { IComment } from "./comment.type";
 
 export interface ITask {
   id: string;
@@ -7,4 +8,5 @@ export interface ITask {
   description?: string;
   dateAdded?: Date;
   user?: IUser;
+  comments: IComment[];
 }

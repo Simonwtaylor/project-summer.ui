@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Sidebar, Menu, Icon } from 'semantic-ui-react';
+import { Sidebar, Menu, Icon, Popup } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector } from 'react-redux';
@@ -26,14 +26,20 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           <span>
             {currentSprint.name}
           </span>
-          <Icon
-            name={'exchange'}
-            style={{ 
-              fontSize: '1.2em',
-              marginLeft: '10px',
-              cursor: 'pointer'
-            }}
-            onClick={() => onSprintChange(+currentSprint.id)}
+          <Popup
+            content={'Change Sprint'}
+            key={`changesprinticon`}
+            trigger={
+              <Icon
+                name={'exchange'}
+                style={{ 
+                  fontSize: '1.2em',
+                  marginLeft: '10px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => onSprintChange(+currentSprint.id)}
+              />
+            }
           />
         </div>
       );

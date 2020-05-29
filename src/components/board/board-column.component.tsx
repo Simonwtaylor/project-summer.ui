@@ -71,37 +71,55 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
   const getColumnActions = () => {
     if (!newTask) {
       return (
-        <Icon
-          name={'plus'}
-          style={{
-            cursor: 'pointer',
-            color: 'green',
-            marginLeft: '10px'
-          }}
-          onClick={() => setNewTask(!newTask)}
+        <Popup
+          content={`Add task to ${name}`}
+          key={`addtasktosprint${name}`}
+          trigger={
+            <Icon
+              name={'plus'}
+              style={{
+                cursor: 'pointer',
+                color: 'green',
+                marginLeft: '10px'
+              }}
+              onClick={() => setNewTask(!newTask)}
+            />
+          }
         />
       )
     }
 
     return (
       <>
-        <Icon
-          name={'save'}
-          style={{
-            cursor: 'pointer',
-            color: 'green',
-            marginLeft: '10px'
-          }}
-          onClick={onSaveClick}
+        <Popup
+          content={`Save task to ${name}`}
+          key={`savetasktosprint${name}`}
+          trigger={
+            <Icon
+              name={'save'}
+              style={{
+                cursor: 'pointer',
+                color: 'green',
+                marginLeft: '10px'
+              }}
+              onClick={onSaveClick}
+            />
+          }
         />
-        <Icon
-          name={'cancel'}
-          style={{
-            cursor: 'pointer',
-            color: 'red',
-            marginLeft: '10px'
-          }}
-          onClick={onCancelClick}
+        <Popup
+          content={`Cancel`}
+          key={`canceltasktosprint${name}`}
+          trigger={
+            <Icon
+              name={'cancel'}
+              style={{
+                cursor: 'pointer',
+                color: 'red',
+                marginLeft: '10px'
+              }}
+              onClick={onCancelClick}
+            />
+          }
         />
       </>
     )
@@ -109,8 +127,20 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
 
   return (
     <Grid.Column key={`sprintboard${droppableId}`}>
-      <div>
-        <span style={{color: 'white'}}>{name}</span>
+      <div
+        style={{
+          marginTop: '5px',
+          marginBottom: '10px',
+        }}
+      >
+        <span
+          style={{
+            color: 'white',
+            fontSize: '1.3em',
+          }}
+        >
+          <b>{name}</b>
+        </span>
         {getColumnActions()}
       </div>
       {getNewTaskInput()}
