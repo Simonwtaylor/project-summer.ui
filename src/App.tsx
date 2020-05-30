@@ -38,6 +38,7 @@ class App extends Component<any, any> {
           setCurrentUser({
             id: userRef.id, 
             ...userRef,
+            ...user,
           });
           
           this.socket = socketIOClient(
@@ -46,9 +47,15 @@ class App extends Component<any, any> {
               token: await user.getIdToken(),
             }
           });
+
+          this.socket?.emit('joinUserRoom', { id: userRef.id });
         }
       }
-      setCurrentUser(user);
+      
+      setCurrentUser({
+        ...this.props.currentUser,
+        ...user,
+      });
     });
   }
 
