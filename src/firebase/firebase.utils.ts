@@ -17,11 +17,17 @@ export const createUserProfileDocument =
   async (userAuth: any, additionalData: any) => {
     if(!userAuth) return;
 
-    const userRef = await Axios.get(
-      `${process.env.REACT_APP_TASK_URL}/external/auth/${userAuth.uid}?apiKey=${process.env.REACT_APP_API_KEY}`
-    );
-    
-    if(!userRef || !userRef.data || userRef.status !== 200) {
+    try {
+      const userRef = await Axios.get(
+        `${process.env.REACT_APP_TASK_URL}/external/auth/${userAuth.uid}?apiKey=${process.env.REACT_APP_API_KEY}`
+      );
+
+      if(!userRef || !userRef.data || userRef.status !== 200) {
+        console.log('hit here'); 
+      }
+
+      return userRef.data;
+    } catch (error) { 
 
       const {
         displayName, 
@@ -38,14 +44,18 @@ export const createUserProfileDocument =
       };
 
       try {
-       const newUser = await Axios.post(`${process.env.REACT_APP_TASK_URL}/user/`, newUserData);
-       return newUser.data();
+        const newUser = await Axios.post(
+          `${process.env.REACT_APP_TASK_URL}/external/user?apiKey=${process.env.REACT_APP_API_KEY}`, 
+          newUserData
+        );
+
+       return newUser.data;
       } catch (error) {
         console.error(error);
       }
-    }
 
-    return userRef.data;
+      console.log(error);
+    }
 }
 
 firebase.initializeApp(config);
