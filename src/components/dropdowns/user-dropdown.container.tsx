@@ -23,6 +23,8 @@ const UserDropdownContainer: React.FC<IUserDropdownContainerProps> = ({
   socket?.emit('getUsers');
 
   socket?.on('users', (data: IUser[]) => {
+    options.splice(0, options.length);
+    
     data.map(({ id, displayName, photoURL }: IUser) => {
       return options.push(
         {

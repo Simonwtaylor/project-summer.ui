@@ -18,4 +18,8 @@
   .ui.visible.thin.left.sidebar~.pusher {
     transform: translate3d(200px,0,0);
   }
+
+  .board.col.draggable {
+    overflow-y: scroll;
+  }
 }

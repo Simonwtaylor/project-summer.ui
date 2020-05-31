@@ -26,7 +26,8 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
     background: isDraggingOver ? 'lightblue' : 'lightgrey',
     border: isDraggingOver ? '1px dotted grey' : '',
     padding: 8,
-    width: 250
+    width: 250,
+    maxHeight: '75vh',
   });
 
   const getItemStyle = (isDragging: any, draggableStyle: any) => ({
@@ -148,6 +149,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
         {(provided: any, snapshot: any) => (
           <div
             ref={provided.innerRef}
+            className={'board col draggable'}
             style={getListStyle(snapshot.isDraggingOver)}>
             {items.map((item: ITask, index: any) => (
               <Draggable
