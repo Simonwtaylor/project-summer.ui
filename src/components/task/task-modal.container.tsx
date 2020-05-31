@@ -50,8 +50,8 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   };
 
   const handleUserChange = (user: any) => {
-    console.log(`task ${id} user changed to ${user.displayName}`);
-    socket?.emit('updateTaskUser', { taskId: id, userId: +user.id });
+    console.log(`task ${id} user changed to ${user.text}`);
+    socket?.emit('updateTaskUser', { taskId: id, userId: +user.value });
   };
 
   const handleTitleChange = (title: string) => {
