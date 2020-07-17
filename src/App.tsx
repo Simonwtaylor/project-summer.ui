@@ -26,6 +26,8 @@ class App extends Component<any, any> {
     this.setVisible = this.setVisible.bind(this);
     this.handleMenuToggle = this.handleMenuToggle.bind(this);
     this.handleSprintChange = this.handleSprintChange.bind(this);
+    this.getRouting = this.getRouting.bind(this);
+    this.loggedIn = this.loggedIn.bind(this);
   }
 
   componentDidMount() {
@@ -75,8 +77,40 @@ class App extends Component<any, any> {
     this.socket?.emit('exitSprintRoom', { id: prevSprintId });
   }
 
+  private loggedIn() {
+    const { currentUser } = this.props;
+    if (
+      !currentUser ||
+      (currentUser && Object.keys(currentUser).length === 0)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   componentWillUnmount() {
     this.unsubscribeFromAuth();
+  }
+
+  private getRouting() {
+    if (!this.loggedIn()) {
+      return (
+        <>
+          <Route path="/login" component={LoginPage} />
+          <Redirect from="/" exact to="/login" />
+        </>
+      );
+    }
+    
+    return (
+      <>
+        <Route path="/sprint/:id" render={() => <SprintPage socket={this.socket} />}  />
+        <Route path="/sprint" render={() => <SprintPage socket={this.socket} />}  />
+        <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
+        <Redirect from="/" exact to="/home" />
+      </>
+    );
   }
 
   render() {
@@ -85,7 +119,7 @@ class App extends Component<any, any> {
         <Navbar onMenuToggle={this.handleMenuToggle} />
         <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
           <NavSidebar
-            visible={this.state.visible}
+            visible={this.state.visible && this.loggedIn()}
             socket={this.socket}
             onSprintChange={this.handleSprintChange}
           />
@@ -94,16 +128,7 @@ class App extends Component<any, any> {
               <Grid.Row>
                 <Grid.Column>
                   <Switch>
-                    <Route path="/login" component={LoginPage} />
-                    <Route path="/sprint/:id" render={() => <SprintPage socket={this.socket} />}  />
-                    <Route path="/sprint" render={() => <SprintPage socket={this.socket} />}  />
-                    <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
-                    {
-                      (!this.props.currentUser)
-                      ?
-                        <Redirect from="/" exact to="/login" />
-                      : <Redirect from="/" exact to="/home" />
-                    }
+                    {this.getRouting()}
                   </Switch>
                 </Grid.Column>
               </Grid.Row>

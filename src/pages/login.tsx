@@ -13,12 +13,18 @@ const LoginPage: React.FC<ILoginPageProps> = ({
 }) => {
   const currentUser = useSelector(selectCurrentUser);
 
-  if (currentUser) {
+  if (currentUser && Object.keys(currentUser).length !== 0) {
     history.push('/sprint');
   }
 
   return (
-    <div className='login'>
+    <div
+      style={{
+        color: 'white',
+        padding: '20px',
+      }}
+      className='login'
+    >
       <SignIn />
     </div>
   );

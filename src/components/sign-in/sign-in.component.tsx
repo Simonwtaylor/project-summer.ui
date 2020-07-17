@@ -28,7 +28,7 @@ const SignIn: React.FC<ISignInProps> = () => {
   return (
     <div className="sign-in">
       <h2>
-        I already have an account
+        Please sign in with one of the following providers:
       </h2>
       {getUserInfo()}
       <Button
