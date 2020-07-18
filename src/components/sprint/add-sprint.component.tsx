@@ -9,7 +9,7 @@ const AddSprint: React.FC<AddSprintProps> = () => {
   return (
     <Modal centered={false} open={true} onClose={() => console.log()}>
     <Modal.Header>
-      
+      Add Sprint
     </Modal.Header>
     <Modal.Content>
       <Modal.Description>
