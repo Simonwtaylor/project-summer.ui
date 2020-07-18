@@ -1,0 +1,13 @@
+{
+		"React Functional Component": {
+			"scope": "javascript,typescript",
+			"prefix": "rfunc",
+			"body": [
+				"import * as React from 'react';\n",
+				"export interface I${1:name}Props { }\n",
+				"const ${1:name}: React.FC<I${1:name}Props> = ({\n",
+				"});\n",
+				"export default ${1:name}",
+			]
+		},
+}
