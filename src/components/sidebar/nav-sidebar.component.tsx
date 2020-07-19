@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Sidebar, Menu, Icon, Popup, Image } from 'semantic-ui-react';
+import { Sidebar, Menu, Icon, Popup, Image, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,6 +7,7 @@ import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import { CurrentTaskDropdown } from '../dropdowns';
 import { setCurrentUser } from '../../redux/user/user.action';
+import AddSprint from '../sprint/add-sprint.component';
 
 export interface INavSidebarProps {
   socket?: SocketIOClient.Socket;
@@ -24,11 +25,20 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
+  const [addSprint, setAddSprint] = React.useState(false);
+
   const handleCurrentTask = (task: any) => {
     console.log(task);
     socket?.emit('updateUserAssignedTask', { 
       userId: currentUser.id,
       taskId: task.value,
+    });
+  };
+
+  const handleAddSprint = (sprint: any) => {
+    console.log(sprint);
+    socket?.emit('addSprint', { 
+      ...sprint,
     });
   };
 
@@ -137,8 +147,26 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           />
           Boards
         </Menu.Item>
+        <Menu.Item>
+          <Button
+            color={'green'}
+            onClick={() => setAddSprint(!addSprint)}
+          >
+            Add Sprint
+          </Button>
+        </Menu.Item>
       </>
     )
+  };
+
+  const getAddSprint = () => {
+    return(
+      <AddSprint
+        show={addSprint}
+        onModalClose={() => setAddSprint(false)}
+        onAddSprint={handleAddSprint}
+      />
+    );
   };
 
   return (
@@ -155,6 +183,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       }}
     >
       {getRender()}
+      {getAddSprint()}
     </Sidebar>
   );
 }

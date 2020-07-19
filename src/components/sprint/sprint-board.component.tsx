@@ -93,6 +93,8 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
       return (<h1>Please select a sprint</h1>);
     }
 
+    boards.sort((a,b) => { return a.order-b.order});
+
     return boards.map(({ tasks: boardTasks, name, id }: IBoard) => {
       return (
         <BoardColumn
