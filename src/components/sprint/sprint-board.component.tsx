@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { Grid } from 'semantic-ui-react';
+import { useSelector } from 'react-redux';
+import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
+import { Grid, Label, Icon } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
-import { ISprint, IBoard } from '../../lib';
+import { ISprint, IBoard, ITask } from '../../lib';
+import { DateService } from '../../lib/services/date.service';
 import { useParams, withRouter, RouteComponentProps } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
 
@@ -18,6 +21,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
   const { id } = useParams();
+  const currentSprint = useSelector(selectCurrentSprint);
 
   React.useEffect(() => {
     if (socket) {
@@ -125,17 +129,72 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     return <></>;
   };
 
+  const getDaysLeft = () => {
+    if (currentSprint) {
+      const { endDate } = currentSprint;
+      const a = new Date();
+      const b = new Date(endDate);
+      const difference = DateService.getDaysDifference(a, b);
+
+      return (
+        <Label as='a' color='blue' icon={true}>
+          <Icon name={'calendar check'} />
+          {difference}
+          <Label.Detail>Days left</Label.Detail>
+        </Label>
+      );
+    }
+
+    return <></>;
+  };
+
+  const calculatePoints = () => {
+    if (!currentSprint) {
+      return <></>;
+    }
+
+    let points = 0;
+
+    currentSprint?.boards.forEach((board: IBoard) => {
+      board.tasks
+        //.filter(a => a.completed === false)
+        .forEach((task: ITask) => points += task.storyPoints||0);
+    });
+
+    return (
+      <Label as='a' color='teal' icon={true}>
+        <Icon name={'gamepad'} />
+        {points}
+        <Label.Detail>Points</Label.Detail>
+      </Label>
+    );
+  };
+
+
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <>
       <Grid
-        style={{ padding: '15px' }}
+        style={{ padding: '15px', color: 'white', borderBottom: '1px solid white' }}
       >
-        {getModal()}
-        <Grid.Row columns={4}>
-          {getBoardContent()}
+        <Grid.Row columns={1}>
+          <Grid.Column width={5}>
+            <h2>{currentSprint.name}</h2>
+            {getDaysLeft()}
+            {calculatePoints()}
+          </Grid.Column>
         </Grid.Row>
       </Grid>
-    </DragDropContext>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Grid
+          style={{ padding: '15px' }}
+        >
+          {getModal()}
+          <Grid.Row columns={4}>
+            {getBoardContent()}
+          </Grid.Row>
+        </Grid>
+      </DragDropContext>
+    </>
   );
 }
  

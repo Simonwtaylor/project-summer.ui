@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Sidebar, Menu, Icon, Popup, Image, Button } from 'semantic-ui-react';
+import { Sidebar, Menu, Icon, Popup, Image, Button, Label, Grid } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector, useDispatch } from 'react-redux';
@@ -103,19 +103,27 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   const getCurrentTask = () => {
     if (currentUser?.currentTask) {
       return (
-        <span
+        <Label
+          as={'a'}
+          color='teal'
+          icon={true}
           onClick={() => dispatch(setCurrentUser({ ...currentUser, currentTask: null }))}
-          style={{ marginLeft: '10px', marginTop: '5px' }}
+          style={{
+            float: 'none',
+            width: '100%',
+            marginTop: '4px',
+          }}
         >
-          on: {currentUser.currentTask.title}
-        </span>
+          <Icon name={'check circle outline'} />
+          {currentUser.currentTask.title}
+        </Label>
       );
     }
     
     return (
       <CurrentTaskDropdown
         name={'taskId'}
-        placeholder={'Select current task'}
+        placeholder={'Task'}
         onSelectTask={handleCurrentTask}
         socket={socket}
         selectedTask={currentUser?.currentTask}
@@ -131,8 +139,16 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
     return (
       <>
         <Menu.Item>
-          {getUserProfile()}
-          {getCurrentTask()}
+          <Grid>
+            <Grid.Row columns={2}>
+              <Grid.Column width={5}>
+                {getUserProfile()}
+              </Grid.Column>
+              <Grid.Column width={11}>
+                {getCurrentTask()}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Menu.Item>
         <Menu.Item>
           {getSprintSection()}
