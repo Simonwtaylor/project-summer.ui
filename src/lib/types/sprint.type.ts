@@ -9,3 +9,10 @@ export interface ISprint {
   prefix?: string;
   boards: IBoard[];
 }
+
+export interface IAddSprint {
+  name: string;
+  startDate?: Date;
+  endDate?: Date;
+  prefix?: string;
+}

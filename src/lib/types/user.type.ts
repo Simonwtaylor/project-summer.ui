@@ -5,3 +5,10 @@ export interface IUser {
   email: string;
   uid: string;
 }
+
+export interface IAddUser {
+  displayName: string;
+  photoURL: string;
+  email: string;
+  uid: string;
+}

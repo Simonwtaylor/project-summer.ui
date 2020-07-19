@@ -6,3 +6,8 @@ export interface IBoard {
   tasks: ITask[];
   order: number;
 }
+
+export interface IAddBoard {
+  name: string;
+  order?: number;
+}

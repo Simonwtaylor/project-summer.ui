@@ -11,3 +11,8 @@ export interface ITask {
   user?: IUser;
   comments: IComment[];
 }
+
+export interface IAddTask {
+  title: string;
+  boardId?: string;
+}

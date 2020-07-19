@@ -6,3 +6,8 @@ export interface IComment {
   datePosted: Date;
   user: IUser;
 }
+
+export interface IAddComment {
+  content: string;
+  user: IUser;
+}
