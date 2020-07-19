@@ -28,7 +28,6 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   const [addSprint, setAddSprint] = React.useState(false);
 
   const handleCurrentTask = (task: any) => {
-    console.log(task);
     socket?.emit('updateUserAssignedTask', { 
       userId: currentUser.id,
       taskId: task.value,
@@ -36,7 +35,6 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   };
 
   const handleAddSprint = (sprint: any) => {
-    console.log(sprint);
     socket?.emit('addSprint', { 
       ...sprint,
     });
@@ -56,7 +54,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       return (
         <div>
           <span>
-            {currentSprint.name}
+            <b>{currentSprint.name}</b>
           </span>
           <Popup
             content={'Change Sprint'}

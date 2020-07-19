@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { ITask } from '../../lib';
-import { Grid, Icon, Input, Popup, Image } from 'semantic-ui-react';
+import { Grid, Icon, Input, Popup, Image, Label } from 'semantic-ui-react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 export interface IBoardColumnProps extends RouteComponentProps {
@@ -168,9 +168,10 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                       provided.draggableProps.style
                     )}>
                       <Grid>
-                        <Grid.Row columns={2}>
+                        <Grid.Row columns={3}>
                           <Grid.Column
-                            computer={4}
+                            width={4}
+
                           >
                             {(item.user && (
                               <Popup
@@ -190,7 +191,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                             )}
                           </Grid.Column>
                           <Grid.Column
-                            computer={12}
+                            width={9}
                           >
                             <span
                               style={{
@@ -199,6 +200,15 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                             >
                               {item.title}
                             </span>
+                          </Grid.Column>
+                          <Grid.Column width={3}>
+                            <Label
+                              size={'tiny'}
+                              color={'teal'}
+                              circular={true}
+                            >
+                              {item.storyPoints || '?'}
+                            </Label>
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>

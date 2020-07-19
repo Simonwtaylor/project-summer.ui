@@ -21,7 +21,7 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({
     socket?.emit('getSprint', { id: value });
 
     socket?.on('sprint', (sprint: ISprint) => {
-      dispatch(setCurrentSprint(sprint))
+      dispatch(setCurrentSprint(sprint));
     });
   };
 
