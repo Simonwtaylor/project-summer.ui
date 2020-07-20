@@ -6,6 +6,7 @@ export interface ITask {
   title: string;
   boardId?: string;
   description?: string;
+  completed?: boolean;
   dateAdded?: Date;
   storyPoints?: number;
   user?: IUser;

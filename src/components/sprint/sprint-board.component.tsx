@@ -6,10 +6,10 @@ import { Grid, Label, Icon } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
 import { ISprint, IBoard, ITask } from '../../lib';
 import { DateService } from '../../lib/services/date.service';
-import { useParams, withRouter, RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
 
-export interface SprintBoardProps extends RouteComponentProps {
+export interface SprintBoardProps {
   sprintId: number;
   socket?: SocketIOClient.Socket;
 }
@@ -17,7 +17,6 @@ export interface SprintBoardProps extends RouteComponentProps {
 const SprintBoard: React.FC<SprintBoardProps> = ({
   sprintId,
   socket,
-  history,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
   const { id } = useParams();
@@ -157,8 +156,8 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
     currentSprint?.boards.forEach((board: IBoard) => {
       board.tasks
-        //.filter(a => a.completed === false)
-        .forEach((task: ITask) => points += task.storyPoints||0);
+        .filter(a => !a.completed)
+        .forEach((task: ITask) => points += task.storyPoints || 0);
     });
 
     return (
@@ -198,4 +197,4 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   );
 }
  
-export default withRouter(SprintBoard);
+export default SprintBoard;
