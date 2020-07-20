@@ -31,15 +31,10 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
   });
 
   const getItemStyle = (isDragging: any, draggableStyle: any) => ({
-    // some basic styles to make the items look a bit nicer
     userSelect: 'none',
     padding: 8 * 2,
     margin: `0 0 ${8}px 0`,
-
-    // change background colour if dragging
     background: isDragging ? 'lightgreen' : '',
-
-    // styles we need to apply on draggables
     ...draggableStyle
   });
 
@@ -126,6 +121,37 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
     )
   };
 
+  const getColumnTags = () => {
+    let points = 0;
+
+    items
+        .filter(a => !a.completed)
+        .forEach((task: ITask) => points += task.storyPoints || 0);
+
+    return (
+      <>
+        <Popup
+          content={`${items.length} task(s) in ${name}`}
+          key={`numberoftasksin${name}`}
+          trigger={
+            <Label as='a' color='orange'>
+              {items.length}
+            </Label>
+          }
+        />
+        <Popup
+          content={`${points} point(s) in ${name}`}
+          key={`numberofpointsin${name}`}
+          trigger={
+            <Label as='a' color='teal'>
+              {points}
+            </Label>
+          }
+        />
+      </>
+    )
+  };
+
   return (
     <Grid.Column key={`sprintboard${droppableId}`}>
       <div
@@ -143,6 +169,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
           <b>{name}</b>
         </span>
         {getColumnActions()}
+        {getColumnTags()}
       </div>
       {getNewTaskInput()}
       <Droppable droppableId={droppableId}>

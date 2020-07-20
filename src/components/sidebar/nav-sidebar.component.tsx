@@ -88,15 +88,17 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
     }
 
     return (
-      <Image
-        src={currentUser?.photoURL}
-        circular={true}
-        size={'tiny'}
-        style={{
-          width: '30px',
-          display: 'inline-block'
-        }}
-      />
+      <>
+        <Image
+          src={currentUser?.photoURL}
+          circular={true}
+          size={'tiny'}
+          style={{
+            width: '30px',
+            display: 'inline-block'
+          }}
+        />
+      </>
     )
   };
 
@@ -138,7 +140,11 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
 
     return (
       <>
-        <Menu.Item>
+        <Menu.Item
+          style={{
+            borderTop: '1px solid rgba(255,255,255,.1)',
+          }}
+        >
           <Grid>
             <Grid.Row columns={2}>
               <Grid.Column width={5}>

@@ -2,9 +2,10 @@ import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
-import { Grid, Label, Icon } from 'semantic-ui-react';
+import { Grid, Label, Icon, Card } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
 import { ISprint, IBoard, ITask } from '../../lib';
+import { ROUTER_ENUMS } from '../../lib/enums/router.enums';
 import { DateService } from '../../lib/services/date.service';
 import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
@@ -19,9 +20,11 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   socket,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
+  const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(ROUTER_ENUMS.SPRINT);
+
   const { id } = useParams();
   const currentSprint = useSelector(selectCurrentSprint);
-
+  
   React.useEffect(() => {
     if (socket) {
       socket.emit('joinSprintRoom', { id: sprintId });
@@ -169,30 +172,98 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     );
   };
 
+  const handleNavigationClick = (route: ROUTER_ENUMS) => {
+    setPageState(route);
+  };
+
+  const renderContent = () => {
+    switch(pageState) {
+      case ROUTER_ENUMS.SPRINT_ACTIVITY:
+        return(
+          <>
+            Activity
+          </>
+        );
+      case ROUTER_ENUMS.SPRINT_CHAT:
+        return(
+          <>
+            Chat
+          </>
+        );
+      case ROUTER_ENUMS.SPRINT_STATS:
+        return(
+          <>
+            Stats
+          </>
+        );
+      case ROUTER_ENUMS.SPRINT:
+      default:
+        return (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Grid
+              style={{ padding: '15px' }}
+            >
+              {getModal()}
+              <Grid.Row columns={4}>
+                {getBoardContent()}
+              </Grid.Row>
+            </Grid>
+          </DragDropContext>
+        );
+    }
+  }
 
   return (
     <>
-      <Grid
-        style={{ padding: '15px', color: 'white', borderBottom: '1px solid white' }}
+      <Card
+        style={{
+          width: '35%',
+          padding: '5px',
+          margin: '15px',
+        }}
       >
-        <Grid.Row columns={1}>
-          <Grid.Column width={5}>
-            <h2>{currentSprint.name}</h2>
-            {getDaysLeft()}
-            {calculatePoints()}
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      <DragDropContext onDragEnd={onDragEnd}>
         <Grid
-          style={{ padding: '15px' }}
+          style={{ padding: '10px 15px' }}
         >
-          {getModal()}
-          <Grid.Row columns={4}>
-            {getBoardContent()}
+          <Grid.Row columns={1}>
+            <Grid.Column width={12}>
+              <span
+                style={{
+                  fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+                  fontSize: "1.7rem",
+                  fontWeight: 700,
+                  marginRight: '10px',
+                }}
+              >
+                {currentSprint.name}
+              </span>
+              {getDaysLeft()}
+              {calculatePoints()}
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row columns={1}>
+            <Grid.Column width={12}>
+              <Label as='a' color='orange' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT)}>
+                <Icon name={'columns'} />
+                <Label.Detail>Boards</Label.Detail>
+              </Label>
+              <Label as='a' color='violet' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_ACTIVITY)}>
+                <Icon name={'history'} />
+                <Label.Detail>Activity</Label.Detail>
+              </Label>
+              <Label as='a' color='olive' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_CHAT)}>
+                <Icon name={'chat'} />
+                <Label.Detail>Chat</Label.Detail>
+              </Label>
+              <Label as='a' color='grey' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_STATS)}>
+                <Icon name={'line graph'} />
+                <Label.Detail>Stats</Label.Detail>
+              </Label>
+            </Grid.Column>
           </Grid.Row>
         </Grid>
-      </DragDropContext>
+      </Card>
+      {renderContent()}
     </>
   );
 }
