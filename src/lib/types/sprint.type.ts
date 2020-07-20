@@ -1,4 +1,5 @@
 import { IBoard } from "./board.type";
+import { IComment } from "./comment.type";
 
 export interface ISprint {
   id: number;
@@ -8,6 +9,7 @@ export interface ISprint {
   completed?: boolean;
   prefix?: string;
   boards: IBoard[];
+  comments: IComment[];
 }
 
 export interface IAddSprint {

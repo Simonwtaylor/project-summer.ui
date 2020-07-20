@@ -11,6 +11,20 @@ body {
 .app {
   background-color: #36393f;
   height: 100vh;
+
+  .ui {
+    &.comments {
+      .comment {
+        .author, .text {
+          color: white;
+        }
+
+        .metadata {
+          color: lightgrey;
+        }
+      }
+    }
+  }
 }
 
 code {

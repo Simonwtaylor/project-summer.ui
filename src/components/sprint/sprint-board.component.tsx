@@ -2,13 +2,15 @@ import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
-import { Grid, Label, Icon, Card } from 'semantic-ui-react';
+import { Grid, Label, Icon, Card, Comment, Header, Form, Button } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
-import { ISprint, IBoard, ITask } from '../../lib';
+import { ISprint, IBoard, ITask, IComment } from '../../lib';
 import { ROUTER_ENUMS } from '../../lib/enums/router.enums';
 import { DateService } from '../../lib/services/date.service';
 import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
+import moment from 'moment';
+import { selectCurrentUser } from '../../redux/user/user.selector';
 
 export interface SprintBoardProps {
   sprintId: number;
@@ -21,10 +23,12 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
   const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(ROUTER_ENUMS.SPRINT);
+  const [commentContent, setCommentContent] = React.useState('');
 
   const { id } = useParams();
   const currentSprint = useSelector(selectCurrentSprint);
-  
+  const currentUser = useSelector(selectCurrentUser);
+
   React.useEffect(() => {
     if (socket) {
       socket.emit('joinSprintRoom', { id: sprintId });
@@ -176,6 +180,10 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     setPageState(route);
   };
 
+  const handleCommentSubmit = () => {
+    socket?.emit('addCommentToSprint', { sprintId, content: commentContent, uid: currentUser.uid });
+  };
+
   const renderContent = () => {
     switch(pageState) {
       case ROUTER_ENUMS.SPRINT_ACTIVITY:
@@ -186,9 +194,52 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
         );
       case ROUTER_ENUMS.SPRINT_CHAT:
         return(
-          <>
-            Chat
-          </>
+          <Comment.Group
+            style={{ padding: '15px' }}
+          >
+            <Header as='h3' dividing
+              style={{
+                color: 'white',
+              }}
+            >
+              Comments
+            </Header>
+            {
+              (currentSprint.comments.map((comment: IComment) => {
+                return (
+                  <Comment
+                    style={{
+                      color: 'white',
+                    }}
+                  >
+                    <Comment.Avatar src={comment.user?.photoURL} />
+                    <Comment.Content>
+                      <Comment.Author as='a'>{comment.user?.displayName}</Comment.Author>
+                      <Comment.Metadata>
+                        <div>{moment(comment.datePosted).calendar()}</div>
+                      </Comment.Metadata>
+                      <Comment.Text>{comment.content}</Comment.Text>
+                    </Comment.Content>
+                  </Comment>
+                )
+              }))
+            }
+            <Form reply>
+              <Form.TextArea
+                value={commentContent}
+                onChange={
+                  (event: React.FormEvent<HTMLTextAreaElement>) => setCommentContent(event.currentTarget.value)
+                }
+              />
+              <Button
+                onClick={handleCommentSubmit}                
+                labelPosition='left'
+                icon='edit'
+                primary
+                content={'Add Comment'}
+              />
+            </Form>
+          </Comment.Group>
         );
       case ROUTER_ENUMS.SPRINT_STATS:
         return(

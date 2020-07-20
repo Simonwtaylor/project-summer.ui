@@ -61,7 +61,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   const handleCommentAdd = (content: string) => {
     console.log(`task ${id} title has comment added to`)
-    socket?.emit('addComment', { taskId: id, content, uid: currentUser.uid });
+    socket?.emit('addCommentToTask', { taskId: id, content, uid: currentUser.uid });
   };
 
   const handleStoryPointsChange = (storyPoints: number) => {
