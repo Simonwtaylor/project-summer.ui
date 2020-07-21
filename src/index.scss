@@ -14,13 +14,23 @@ body {
 
   .ui {
     &.comments {
+      .header {
+        &.white {
+          color: white;
+        }
+      }
+
       .comment {
         .author, .text {
-          color: white;
+          &.white {
+            color: white;
+          }
         }
 
         .metadata {
-          color: lightgrey;
+          &.white {
+            color: lightgrey;
+          }
         }
       }
     }

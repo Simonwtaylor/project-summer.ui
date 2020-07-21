@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Modal, Input, Popup, Image, Comment, Header, Form, Button, Grid } from 'semantic-ui-react';
+import { Modal, Input, Popup, Image, Grid, Icon } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
 import { IUser, IComment } from '../../lib';
-import moment from 'moment';
+import Comments from '../comments/comments.component';
 
 export interface ITaskModalProps {
   id: string;
   title: string;
   boardId?: string;
   description?: string;
+  completed?: boolean;
   dateAdded?: Date;
   storyPoints?: number;
   user?: IUser;
@@ -20,6 +21,7 @@ export interface ITaskModalProps {
   onTitleChange: (title: string) => void;
   onCommentAdd: (content: string) => void;
   onStoryPointsChange: (storyPoints: number) => void;
+  onCompleteChange: () => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
@@ -28,6 +30,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   boardId,
   description,
   dateAdded,
+  completed,
   storyPoints,
   user,
   comments,
@@ -38,11 +41,12 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   onTitleChange,
   onCommentAdd,
   onStoryPointsChange,
+  onCompleteChange,
 }) => {
   const [desc, setDescription] = React.useState(description);
   const [newTitle, setNewTitle] = React.useState(title);
   const [newStoryPoints, setNewStoryPoints] = React.useState(storyPoints);
-  const [content, setContent] = React.useState('');
+
   const [descFocus, setDescFocus] = React.useState<boolean>(false);
   const [titleFocus, setTitleFocus] = React.useState<boolean>(false);
   const [storyFocus, setStoryFocus] = React.useState<boolean>(false);
@@ -81,9 +85,8 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     onStoryPointsChange(+e.target.value);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = (content: string) => {
     onCommentAdd(content);
-    setContent('');
   };
 
   const getUserSection = () => {
@@ -107,6 +110,48 @@ const TaskModal: React.FC<ITaskModalProps> = ({
 
     return <></>;
   };
+
+  const getCompleteTask = () => {
+    if (!completed) {
+      return (
+        <Popup
+          content={'Complete Task'}
+          key={`completetaskbutton`}
+          trigger={
+            <Icon
+              name={'check circle outline'}
+              color={'green'}
+              style={{
+                cursor: 'pointer',
+                float: 'right',
+                marginTop: '10px',
+              }}
+              onClick={onCompleteChange}
+            />
+          }
+        />
+      )
+    }
+
+    return (
+      <Popup
+        content={'Mark Task as Incomplete'}
+        key={`incompletetaskbutton`}
+        trigger={
+          <Icon
+            name={'check circle'}
+            color={'green'}
+            style={{
+              cursor: 'pointer',
+              float: 'right',
+              marginTop: '10px',
+            }}
+            onClick={onCompleteChange}
+          />
+        }
+      />
+    )
+  }
 
   return (
     <Modal centered={false} open={true} onClose={() => onModalClose()}>
@@ -142,6 +187,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           value={newTitle}
           transparent={true}
         />
+        {getCompleteTask()}
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>
@@ -175,45 +221,10 @@ const TaskModal: React.FC<ITaskModalProps> = ({
               </Grid.Column>
             </Grid.Row>
           </Grid>
-          <Comment.Group>
-            <Header as='h3' dividing>
-              Comments
-            </Header>
-            {
-              (comments.map((comment: IComment) => {
-                return (
-                  <Comment>
-                    <Comment.Avatar src={comment.user?.photoURL} />
-                    <Comment.Content>
-                      <Comment.Author as='a'>{comment.user?.displayName}</Comment.Author>
-                      <Comment.Metadata>
-                        <div>{moment(comment.datePosted).calendar()}</div>
-                      </Comment.Metadata>
-                      <Comment.Text>{comment.content}</Comment.Text>
-                      <Comment.Actions>
-                        <Comment.Action>Reply</Comment.Action>
-                      </Comment.Actions>
-                    </Comment.Content>
-                  </Comment>
-                )
-              }))
-            }
-            <Form reply>
-              <Form.TextArea
-                value={content}
-                onChange={
-                  (event: React.FormEvent<HTMLTextAreaElement>) => setContent(event.currentTarget.value)
-                }
-              />
-              <Button
-                onClick={handleCommentSubmit}                
-                labelPosition='left'
-                icon='edit'
-                primary
-                content={'Add Comment'}
-              />
-            </Form>
-          </Comment.Group>
+          <Comments
+            comments={comments}
+            onCommentSubmit={handleCommentSubmit}
+          />
         </Modal.Description>
       </Modal.Content>
     </Modal>

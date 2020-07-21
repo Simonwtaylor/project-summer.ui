@@ -4,6 +4,7 @@ import { ITask } from '../../lib/types';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
 
 export interface ITaskModalContainerProps extends RouteComponentProps {
   id: number;
@@ -18,6 +19,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   onClose,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
+  const { id: sprintId } = useSelector(selectCurrentSprint);
   const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined);
 
   React.useEffect(() => {
@@ -69,6 +71,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     socket?.emit('updateTaskStoryPoints', { taskId: id, storyPoints });
   };
 
+  const handleCompleteChange = () => {
+    console.log(`task ${id} complete change`)
+    socket?.emit('updateTaskComplete', { taskId: id, sprintId });
+  };
+
   return (
     <TaskModal
       {...modalTask}
@@ -79,6 +86,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       onTitleChange={handleTitleChange}
       onCommentAdd={handleCommentAdd}
       onStoryPointsChange={handleStoryPointsChange}
+      onCompleteChange={handleCompleteChange}
     />
   )
 }

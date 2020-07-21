@@ -2,14 +2,14 @@ import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
-import { Grid, Label, Icon, Card, Comment, Header, Form, Button } from 'semantic-ui-react';
+import { Grid, Label, Icon, Card } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
-import { ISprint, IBoard, ITask, IComment } from '../../lib';
+import { ISprint, IBoard, ITask } from '../../lib';
 import { ROUTER_ENUMS } from '../../lib/enums/router.enums';
 import { DateService } from '../../lib/services/date.service';
+import Comments from '../comments/comments.component';
 import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
-import moment from 'moment';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 
 export interface SprintBoardProps {
@@ -23,10 +23,9 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
   const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(ROUTER_ENUMS.SPRINT);
-  const [commentContent, setCommentContent] = React.useState('');
 
   const { id } = useParams();
-  const currentSprint = useSelector(selectCurrentSprint);
+  const currentSprint: ISprint = useSelector(selectCurrentSprint);
   const currentUser = useSelector(selectCurrentUser);
 
   React.useEffect(() => {
@@ -136,7 +135,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   };
 
   const getDaysLeft = () => {
-    if (currentSprint) {
+    if (currentSprint.endDate) {
       const { endDate } = currentSprint;
       const a = new Date();
       const b = new Date(endDate);
@@ -180,8 +179,8 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     setPageState(route);
   };
 
-  const handleCommentSubmit = () => {
-    socket?.emit('addCommentToSprint', { sprintId, content: commentContent, uid: currentUser.uid });
+  const handleCommentSubmit = (content: string) => {
+    socket?.emit('addCommentToSprint', { sprintId, content, uid: currentUser.uid });
   };
 
   const renderContent = () => {
@@ -194,52 +193,11 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
         );
       case ROUTER_ENUMS.SPRINT_CHAT:
         return(
-          <Comment.Group
-            style={{ padding: '15px' }}
-          >
-            <Header as='h3' dividing
-              style={{
-                color: 'white',
-              }}
-            >
-              Comments
-            </Header>
-            {
-              (currentSprint.comments.map((comment: IComment) => {
-                return (
-                  <Comment
-                    style={{
-                      color: 'white',
-                    }}
-                  >
-                    <Comment.Avatar src={comment.user?.photoURL} />
-                    <Comment.Content>
-                      <Comment.Author as='a'>{comment.user?.displayName}</Comment.Author>
-                      <Comment.Metadata>
-                        <div>{moment(comment.datePosted).calendar()}</div>
-                      </Comment.Metadata>
-                      <Comment.Text>{comment.content}</Comment.Text>
-                    </Comment.Content>
-                  </Comment>
-                )
-              }))
-            }
-            <Form reply>
-              <Form.TextArea
-                value={commentContent}
-                onChange={
-                  (event: React.FormEvent<HTMLTextAreaElement>) => setCommentContent(event.currentTarget.value)
-                }
-              />
-              <Button
-                onClick={handleCommentSubmit}                
-                labelPosition='left'
-                icon='edit'
-                primary
-                content={'Add Comment'}
-              />
-            </Form>
-          </Comment.Group>
+          <Comments
+            colourClass={'white'}
+            comments={currentSprint.comments}
+            onCommentSubmit={handleCommentSubmit}
+          />
         );
       case ROUTER_ENUMS.SPRINT_STATS:
         return(
