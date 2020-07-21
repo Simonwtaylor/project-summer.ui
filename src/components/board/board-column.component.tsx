@@ -186,7 +186,9 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
                 {(provided: any, snapshot: any) => (
                   <div
                     onClick={() => history.push(`/sprint/${item.id}`)}
-                    className={'card ui'}
+                    className={`card ui ${
+                      item.completed ? 'green' : ''
+                    }`}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
