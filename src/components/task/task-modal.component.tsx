@@ -172,7 +172,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
         </Label>
       )
     }
-  }
+  };
 
   const getDueDateSection = () => {
     return (
