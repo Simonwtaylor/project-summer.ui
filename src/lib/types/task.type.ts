@@ -8,6 +8,7 @@ export interface ITask {
   description?: string;
   completed?: boolean;
   dateAdded?: Date;
+  dueDate?: Date;
   storyPoints?: number;
   user?: IUser;
   comments: IComment[];

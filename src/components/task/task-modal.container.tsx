@@ -76,6 +76,11 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
     socket?.emit('updateTaskComplete', { taskId: id, sprintId });
   };
 
+  const handleDueDateChange = (dueDate?: Date) => {
+    console.log(`task ${id} complete change`)
+    socket?.emit('updateTaskDueDate', { taskId: id, sprintId, dueDate });
+  };
+
   return (
     <TaskModal
       {...modalTask}
@@ -87,6 +92,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       onCommentAdd={handleCommentAdd}
       onStoryPointsChange={handleStoryPointsChange}
       onCompleteChange={handleCompleteChange}
+      onDueDateChange={handleDueDateChange}
     />
   )
 }

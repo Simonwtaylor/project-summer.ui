@@ -12,6 +12,8 @@ import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
 import { selectCurrentUser } from '../../redux/user/user.selector';
 
+const { SPRINT, SPRINT_ACTIVITY, SPRINT_CHAT, SPRINT_STATS } = ROUTER_ENUMS;
+
 export interface SprintBoardProps {
   sprintId: number;
   socket?: SocketIOClient.Socket;
@@ -22,7 +24,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   socket,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
-  const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(ROUTER_ENUMS.SPRINT);
+  const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(SPRINT);
 
   const { id } = useParams();
   const currentSprint: ISprint = useSelector(selectCurrentSprint);
@@ -185,13 +187,13 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
   const renderContent = () => {
     switch(pageState) {
-      case ROUTER_ENUMS.SPRINT_ACTIVITY:
+      case SPRINT_ACTIVITY:
         return(
           <>
             Activity
           </>
         );
-      case ROUTER_ENUMS.SPRINT_CHAT:
+      case SPRINT_CHAT:
         return(
           <Comments
             colourClass={'white'}
@@ -199,13 +201,13 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
             onCommentSubmit={handleCommentSubmit}
           />
         );
-      case ROUTER_ENUMS.SPRINT_STATS:
+      case SPRINT_STATS:
         return(
           <>
             Stats
           </>
         );
-      case ROUTER_ENUMS.SPRINT:
+      case SPRINT:
       default:
         return (
           <DragDropContext onDragEnd={onDragEnd}>
@@ -252,19 +254,19 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column width={12}>
-              <Label as='a' color='orange' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT)}>
+              <Label as='a' color='orange' icon={true} onClick={() => handleNavigationClick(SPRINT)}>
                 <Icon name={'columns'} />
                 <Label.Detail>Boards</Label.Detail>
               </Label>
-              <Label as='a' color='violet' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_ACTIVITY)}>
+              <Label as='a' color='violet' icon={true} onClick={() => handleNavigationClick(SPRINT_ACTIVITY)}>
                 <Icon name={'history'} />
                 <Label.Detail>Activity</Label.Detail>
               </Label>
-              <Label as='a' color='olive' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_CHAT)}>
+              <Label as='a' color='olive' icon={true} onClick={() => handleNavigationClick(SPRINT_CHAT)}>
                 <Icon name={'chat'} />
                 <Label.Detail>Chat</Label.Detail>
               </Label>
-              <Label as='a' color='grey' icon={true} onClick={() => handleNavigationClick(ROUTER_ENUMS.SPRINT_STATS)}>
+              <Label as='a' color='grey' icon={true} onClick={() => handleNavigationClick(SPRINT_STATS)}>
                 <Icon name={'line graph'} />
                 <Label.Detail>Stats</Label.Detail>
               </Label>

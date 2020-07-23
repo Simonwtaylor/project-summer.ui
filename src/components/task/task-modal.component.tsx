@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Modal, Input, Popup, Image, Grid, Icon } from 'semantic-ui-react';
+import { Modal, Input, Popup, Image, Grid, Icon, Label } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
 import { IUser, IComment } from '../../lib';
 import Comments from '../comments/comments.component';
+import { SingleDatePicker } from 'react-dates';
+import moment from 'moment';
 
 export interface ITaskModalProps {
   id: string;
@@ -11,6 +13,7 @@ export interface ITaskModalProps {
   description?: string;
   completed?: boolean;
   dateAdded?: Date;
+  dueDate?: Date;
   storyPoints?: number;
   user?: IUser;
   comments: IComment[];
@@ -22,6 +25,7 @@ export interface ITaskModalProps {
   onCommentAdd: (content: string) => void;
   onStoryPointsChange: (storyPoints: number) => void;
   onCompleteChange: () => void;
+  onDueDateChange: (dueDate?: Date) => void;
 }
  
 const TaskModal: React.FC<ITaskModalProps> = ({
@@ -30,6 +34,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   boardId,
   description,
   dateAdded,
+  dueDate,
   completed,
   storyPoints,
   user,
@@ -42,15 +47,21 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   onCommentAdd,
   onStoryPointsChange,
   onCompleteChange,
+  onDueDateChange,
 }) => {
   const [desc, setDescription] = React.useState(description);
   const [newTitle, setNewTitle] = React.useState(title);
   const [newStoryPoints, setNewStoryPoints] = React.useState(storyPoints);
+  const [showDueDate, setShowDueDate] = React.useState(false);
+  const [newDueDate, setNewDueDate] = React.useState<moment.Moment|null>(
+    (dueDate) ? moment(dueDate) : null,
+  );
 
   const [descFocus, setDescFocus] = React.useState<boolean>(false);
   const [titleFocus, setTitleFocus] = React.useState<boolean>(false);
   const [storyFocus, setStoryFocus] = React.useState<boolean>(false);
   const [changeUser, setChangeUser] = React.useState<boolean>(false);
+  const [dueDateFocus, setDueDateFocus] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (!descFocus) {
@@ -111,6 +122,72 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     return <></>;
   };
 
+  const getDueDate = () => {
+    if (showDueDate) {
+      return(
+        <div>
+          <SingleDatePicker
+            date={newDueDate}
+            id={'duedate'}
+            focused={dueDateFocus||showDueDate}
+            onDateChange={(date: moment.Moment | null) => {
+              setNewDueDate(date);
+              setShowDueDate(false);
+              onDueDateChange(date?.toDate());
+            }}
+            onFocusChange={({ focused }) => {
+              return (focused) ? setDueDateFocus(true) : setDueDateFocus(false);
+            }}
+          />
+        </div>
+      );
+    } else if (dueDate) {
+      return (
+        <Label
+          as='a'
+          color='blue'
+          icon={true}
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={() => setShowDueDate(!showDueDate)}
+        >
+          <Icon name={'calendar check'} />
+          <Label.Detail>Due {moment(dueDate).fromNow()}</Label.Detail>
+        </Label>
+      )
+    } else {
+      return (
+        <Label
+          as='a'
+          color='blue'
+          icon={true}
+          style={{
+            cursor: 'pointer',
+          }}
+          onClick={() => setShowDueDate(!showDueDate)}
+        >
+          <Icon name={'calendar check'} />
+          <Label.Detail>Set Due Date</Label.Detail>
+        </Label>
+      )
+    }
+  }
+
+  const getDueDateSection = () => {
+    return (
+      <Popup
+        content={'Set Due Date'}
+        key={`setduedatebutton`}
+        trigger={
+          <>
+            {getDueDate()}
+          </>
+        }
+      />
+    );
+  };
+
   const getCompleteTask = () => {
     if (!completed) {
       return (
@@ -155,7 +232,12 @@ const TaskModal: React.FC<ITaskModalProps> = ({
 
   return (
     <Modal centered={false} open={true} onClose={() => onModalClose()}>
-      <Modal.Header>
+      <Modal.Header
+        style={{
+          paddingTop: '1.5rem',
+          paddingBottom: '1.75rem',
+        }}
+      >
         {(user && (
           <Popup
             content={user.displayName}
@@ -193,6 +275,11 @@ const TaskModal: React.FC<ITaskModalProps> = ({
         <Modal.Description>
           {getUserSection()}
           <Grid>
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                {getDueDateSection()}
+              </Grid.Column>
+            </Grid.Row>
             <Grid.Row columns={2}>
               <Grid.Column>
                 <Input
