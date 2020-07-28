@@ -35,6 +35,14 @@ body {
       }
     }
   }
+
+  .activities {
+    .header {
+      &.white {
+        color: white;
+      }
+    }
+  }
 }
 
 code {

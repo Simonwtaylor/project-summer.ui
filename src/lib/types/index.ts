@@ -3,3 +3,4 @@ export * from './board.type';
 export * from './sprint.type';
 export * from './user.type';
 export * from './comment.type';
+export * from './activity.type';

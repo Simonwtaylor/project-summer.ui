@@ -1,5 +1,6 @@
 import { IUser } from "./user.type";
 import { IComment } from "./comment.type";
+import { IActivity } from './activity.type';
 
 export interface ITask {
   id: string;
@@ -12,6 +13,7 @@ export interface ITask {
   storyPoints?: number;
   user?: IUser;
   comments: IComment[];
+  activities: IActivity[];
 }
 
 export interface IAddTask {

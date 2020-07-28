@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
 import { Grid, Label, Icon, Card } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
-import { ISprint, IBoard, ITask } from '../../lib';
+import { ISprint, IBoard, ITask, IActivity } from '../../lib';
 import { ROUTER_ENUMS } from '../../lib/enums/router.enums';
 import { DateService } from '../../lib/services/date.service';
 import Comments from '../comments/comments.component';
 import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
 import { selectCurrentUser } from '../../redux/user/user.selector';
+import ActivityList from '../activity/activity-list.component';
 
 const { SPRINT, SPRINT_ACTIVITY, SPRINT_CHAT, SPRINT_STATS } = ROUTER_ENUMS;
 
@@ -186,11 +187,28 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   };
 
   const renderContent = () => {
+    const activities: any[] = [];
+
+    currentSprint.boards.forEach((board) => {
+      board.tasks.forEach((task) => {
+        task.activities.forEach((activity) => activities.push({
+          ...activity,
+          taskName: task.title,
+          taskId: +task.id,
+        }))
+      })
+    });
+
     switch(pageState) {
       case SPRINT_ACTIVITY:
         return(
           <>
-            Activity
+            <ActivityList
+              activities={
+                activities
+              }
+              colourClass={'white'}
+            />
           </>
         );
       case SPRINT_CHAT:
