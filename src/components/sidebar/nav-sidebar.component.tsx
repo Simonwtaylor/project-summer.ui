@@ -1,24 +1,28 @@
 import * as React from 'react';
-import { Sidebar, Menu, Icon, Popup, Image, Button, Label, Grid } from 'semantic-ui-react';
+import { Sidebar, Menu, Icon, Popup, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
 import { selectCurrentUser } from '../../redux/user/user.selector';
-import { CurrentTaskDropdown } from '../dropdowns';
 import { setCurrentUser } from '../../redux/user/user.action';
 import AddSprint from '../sprint/add-sprint.component';
+import { ROUTER_ENUMS } from '../../lib/enums';
+
+const { SPRINT, SPRINT_ACTIVITY, SPRINT_CHAT } = ROUTER_ENUMS;
 
 export interface INavSidebarProps {
   socket?: SocketIOClient.Socket;
   visible: boolean;
   onSprintChange: (prevSprintId: number) => void;
+  onSprintSectionChange: (sprintSection: ROUTER_ENUMS) => void;
 }
  
 const NavSidebar: React.FC<INavSidebarProps> = ({
   socket,
   visible,
   onSprintChange,
+  onSprintSectionChange,
 }) => {
 
   const currentSprint = useSelector(selectCurrentSprint);
@@ -26,13 +30,6 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   const dispatch = useDispatch();
 
   const [addSprint, setAddSprint] = React.useState(false);
-
-  const handleCurrentTask = (task: any) => {
-    socket?.emit('updateUserAssignedTask', { 
-      userId: currentUser.id,
-      taskId: task.value,
-    });
-  };
 
   const handleAddSprint = (sprint: any) => {
     socket?.emit('addSprint', { 
@@ -50,6 +47,22 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
   }
 
   const getSprintSection = () => {
+    if (currentSprint) {
+      return (
+        <></>
+      );
+    }
+
+    return (
+      <Menu.Item>
+        <SprintSelector
+          socket={socket}
+        />
+      </Menu.Item>
+    )
+  };
+
+  const getSprintHeader = () => {
     if (currentSprint) {
       return (
         <div>
@@ -75,62 +88,42 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       );
     }
 
-    return (
-      <SprintSelector
-        socket={socket}
-      />
-    )
+    return 'Sprint';
   };
 
-  const getUserProfile = () => {
-    if (!currentUser) {
+  const getSprintOptions = () => {
+    if (!currentSprint) {
       return <></>;
     }
 
     return (
       <>
-        <Image
-          src={currentUser?.photoURL}
-          circular={true}
-          size={'tiny'}
-          style={{
-            width: '30px',
-            display: 'inline-block'
-          }}
-        />
+        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT)}>
+          <Icon
+            style={{ fontSize: '1.2em'}}
+            name='columns'
+            size={'small'}
+          />
+          Boards
+        </Menu.Item>
+        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT_ACTIVITY)}>
+          <Icon
+            style={{ fontSize: '1.2em'}}
+            name='history'
+            size={'small'}
+          />
+          Activity
+        </Menu.Item>
+        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT_CHAT)}>
+          <Icon
+            style={{ fontSize: '1.2em'}}
+            name='chat'
+            size={'small'}
+          />
+          Chat
+        </Menu.Item>
       </>
-    )
-  };
-
-  const getCurrentTask = () => {
-    if (currentUser?.currentTask) {
-      return (
-        <Label
-          as={'a'}
-          color='teal'
-          icon={true}
-          onClick={() => dispatch(setCurrentUser({ ...currentUser, currentTask: null }))}
-          style={{
-            float: 'none',
-            width: '100%',
-            marginTop: '4px',
-          }}
-        >
-          <Icon name={'check circle outline'} />
-          {currentUser.currentTask.title}
-        </Label>
-      );
-    }
-    
-    return (
-      <CurrentTaskDropdown
-        name={'taskId'}
-        placeholder={'Task'}
-        onSelectTask={handleCurrentTask}
-        socket={socket}
-        selectedTask={currentUser?.currentTask}
-      />
-    )
+    );
   };
 
   const getRender = () => {
@@ -140,33 +133,19 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
 
     return (
       <>
-        <Menu.Item
+        <Menu.Header
           style={{
-            borderTop: '1px solid rgba(255,255,255,.1)',
+            color: 'white',
+            borderBottom: '1px solid rgba(255,255,255, 0.1',
+            borderTop: '1px solid rgba(255,255,255, 0.1',
+            paddingBottom: '5px',
+            paddingTop: '5px',
           }}
         >
-          <Grid>
-            <Grid.Row columns={2}>
-              <Grid.Column width={5}>
-                {getUserProfile()}
-              </Grid.Column>
-              <Grid.Column width={11}>
-                {getCurrentTask()}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Menu.Item>
-        <Menu.Item>
+          {getSprintHeader()}
+        </Menu.Header>
           {getSprintSection()}
-        </Menu.Item>
-        <Menu.Item as={Link} to={'/sprint'}>
-          <Icon
-            style={{ fontSize: '1.2em'}}
-            name='columns'
-            size={'small'}
-          />
-          Boards
-        </Menu.Item>
+          {getSprintOptions()}
         <Menu.Item>
           <Button
             color={'green'}

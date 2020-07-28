@@ -11,6 +11,7 @@ import { selectCurrentUser } from './redux/user/user.selector';
 import socketIOClient from 'socket.io-client';
 import NavSidebar from './components/sidebar/nav-sidebar.component';
 import { setCurrentSprint } from './redux/sprint/sprint.action';
+import { ROUTER_ENUMS } from './lib/enums';
 
 class App extends Component<any, any> {
   
@@ -21,6 +22,7 @@ class App extends Component<any, any> {
     super(props);
     this.state = {
       visible: true,
+      sprintState: ROUTER_ENUMS.SPRINT,
     }
 
     this.setVisible = this.setVisible.bind(this);
@@ -28,6 +30,7 @@ class App extends Component<any, any> {
     this.handleSprintChange = this.handleSprintChange.bind(this);
     this.getRouting = this.getRouting.bind(this);
     this.loggedIn = this.loggedIn.bind(this);
+    this.handleSprintSectionChange = this.handleSprintSectionChange.bind(this);
   }
 
   componentDidMount() {
@@ -93,6 +96,13 @@ class App extends Component<any, any> {
     this.unsubscribeFromAuth();
   }
 
+  private handleSprintSectionChange(sprintState: ROUTER_ENUMS) {
+    this.setState({
+      ...this.state,
+      sprintState,
+    })
+  }
+
   private getRouting() {
     if (!this.loggedIn()) {
       return (
@@ -105,8 +115,8 @@ class App extends Component<any, any> {
     
     return (
       <>
-        <Route path="/sprint/:id" render={() => <SprintPage socket={this.socket} />}  />
-        <Route path="/sprint" exact render={() => <SprintPage socket={this.socket} />}  />
+        <Route path="/sprint/:id" render={() => <SprintPage sprintState={this.state.sprintState} socket={this.socket} />}  />
+        <Route path="/sprint" exact render={() => <SprintPage sprintState={this.state.sprintState} socket={this.socket} />}  />
         <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
         <Redirect from="/" exact to="/sprint" />
       </>
@@ -116,14 +126,22 @@ class App extends Component<any, any> {
   render() {
     return (
       <div className={'app'}>
-        <Navbar onMenuToggle={this.handleMenuToggle} />
+        <Navbar
+          onMenuToggle={this.handleMenuToggle}
+          socket={this.socket}
+        />
         <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
           <NavSidebar
             visible={this.state.visible && this.loggedIn()}
             socket={this.socket}
             onSprintChange={this.handleSprintChange}
+            onSprintSectionChange={this.handleSprintSectionChange}
           />
-          <Sidebar.Pusher>
+          <Sidebar.Pusher
+            style={{
+              backgroundColor: '#36393f',
+            }}
+          >
             <Grid style={{ backgroundColor: '#36393f'}}>
               <Grid.Row>
                 <Grid.Column>

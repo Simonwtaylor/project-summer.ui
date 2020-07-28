@@ -18,14 +18,15 @@ const { SPRINT, SPRINT_ACTIVITY, SPRINT_CHAT, SPRINT_STATS } = ROUTER_ENUMS;
 export interface SprintBoardProps {
   sprintId: number;
   socket?: SocketIOClient.Socket;
+  sprintState: ROUTER_ENUMS;
 }
  
 const SprintBoard: React.FC<SprintBoardProps> = ({
   sprintId,
   socket,
+  sprintState,
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
-  const [pageState, setPageState] = React.useState<ROUTER_ENUMS|null>(SPRINT);
 
   const { id } = useParams();
   const currentSprint: ISprint = useSelector(selectCurrentSprint);
@@ -178,10 +179,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     );
   };
 
-  const handleNavigationClick = (route: ROUTER_ENUMS) => {
-    setPageState(route);
-  };
-
   const handleCommentSubmit = (content: string) => {
     socket?.emit('addCommentToSprint', { sprintId, content, uid: currentUser.uid });
   };
@@ -199,7 +196,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
       })
     });
 
-    switch(pageState) {
+    switch(sprintState) {
       case SPRINT_ACTIVITY:
         return(
           <>
@@ -243,57 +240,35 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   }
 
   return (
-    <>
-      <Card
-        style={{
-          width: '35%',
-          padding: '5px',
-          margin: '15px',
-        }}
+    <div 
+      style={{
+        padding: '5px',
+        margin: '15px',
+      }}
+    >
+      <Grid
+        style={{ padding: '10px 15px' }}
       >
-        <Grid
-          style={{ padding: '10px 15px' }}
-        >
-          <Grid.Row columns={1}>
-            <Grid.Column width={12}>
-              <span
-                style={{
-                  fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
-                  fontSize: "1.7rem",
-                  fontWeight: 700,
-                  marginRight: '10px',
-                }}
-              >
-                {currentSprint.name}
-              </span>
-              {getDaysLeft()}
-              {calculatePoints()}
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
-            <Grid.Column width={12}>
-              <Label as='a' color='orange' icon={true} onClick={() => handleNavigationClick(SPRINT)}>
-                <Icon name={'columns'} />
-                <Label.Detail>Boards</Label.Detail>
-              </Label>
-              <Label as='a' color='violet' icon={true} onClick={() => handleNavigationClick(SPRINT_ACTIVITY)}>
-                <Icon name={'history'} />
-                <Label.Detail>Activity</Label.Detail>
-              </Label>
-              <Label as='a' color='olive' icon={true} onClick={() => handleNavigationClick(SPRINT_CHAT)}>
-                <Icon name={'chat'} />
-                <Label.Detail>Chat</Label.Detail>
-              </Label>
-              <Label as='a' color='grey' icon={true} onClick={() => handleNavigationClick(SPRINT_STATS)}>
-                <Icon name={'line graph'} />
-                <Label.Detail>Stats</Label.Detail>
-              </Label>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Card>
+        <Grid.Row columns={1}>
+          <Grid.Column width={12}>
+            <span
+              style={{
+                fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
+                fontSize: "1.7rem",
+                fontWeight: 700,
+                marginRight: '10px',
+                color: 'white',
+              }}
+            >
+              {currentSprint.name}
+            </span>
+            {getDaysLeft()}
+            {calculatePoints()}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
       {renderContent()}
-    </>
+    </div>
   );
 }
  

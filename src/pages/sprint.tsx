@@ -3,14 +3,17 @@ import { useSelector } from 'react-redux';
 import { selectCurrentSprint } from '../redux/sprint/sprint.selector';
 import { Grid } from 'semantic-ui-react';
 import { SprintBoard } from '../components/sprint';
+import { ROUTER_ENUMS } from '../lib/enums';
 
 
 export interface ISprintPageProps {
   socket?: SocketIOClient.Socket;
+  sprintState: ROUTER_ENUMS;
 }
 
 const SprintPage: React.FC<ISprintPageProps> = ({
   socket,
+  sprintState,
 }) => {
 
   const currentSprint = useSelector(selectCurrentSprint);
@@ -35,6 +38,7 @@ const SprintPage: React.FC<ISprintPageProps> = ({
     <SprintBoard
       socket={socket}
       sprintId={currentSprint.id}
+      sprintState={sprintState}
     />
   )
 }
