@@ -98,7 +98,14 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
 
     return (
       <>
-        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT)}>
+        <Menu.Item
+          as={Link}
+          to={'/sprint'}
+          onClick={() => onSprintSectionChange(SPRINT)}
+          style={{
+            fontSize: '12px',
+          }}
+        >
           <Icon
             style={{ fontSize: '1.2em'}}
             name='columns'
@@ -106,7 +113,14 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           />
           Boards
         </Menu.Item>
-        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT_ACTIVITY)}>
+        <Menu.Item
+          as={Link}
+          to={'/sprint'}
+          onClick={() => onSprintSectionChange(SPRINT_ACTIVITY)}
+          style={{
+            fontSize: '12px',
+          }}
+        >
           <Icon
             style={{ fontSize: '1.2em'}}
             name='history'
@@ -114,7 +128,14 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           />
           Activity
         </Menu.Item>
-        <Menu.Item as={Link} to={'/sprint'} onClick={() => onSprintSectionChange(SPRINT_CHAT)}>
+        <Menu.Item
+          as={Link}
+          to={'/sprint'}
+          onClick={() => onSprintSectionChange(SPRINT_CHAT)}
+          style={{
+            fontSize: '12px',
+          }}
+        >
           <Icon
             style={{ fontSize: '1.2em'}}
             name='chat'
@@ -149,6 +170,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
         <Menu.Item>
           <Button
             color={'green'}
+            size={'tiny'}
             onClick={() => setAddSprint(!addSprint)}
           >
             Add Sprint
@@ -178,6 +200,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       visible={visible}
       width='thin'
       style={{
+        width: 'inherit',
         backgroundColor: '#2f3136'
       }}
     >

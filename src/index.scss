@@ -13,6 +13,12 @@ body {
   height: 100vh;
 
   .ui {
+    &.card {
+      background-color: #2f4461;
+      box-shadow: 0 1px 3px 0 #2f4461, 0 0 0 1px #2f4461;
+      color: white;
+    }
+
     &.comments {
       .header {
         &.white {
@@ -40,6 +46,78 @@ body {
     .header {
       &.white {
         color: white;
+      }
+    }
+  }
+}
+
+.ui {
+  &.modal.active {
+    background-color: #2f4461;
+
+    .header {
+      background-color: #2f4461;
+      color: white;
+
+      .ui.input>input {
+        color: white;
+      }
+    }
+
+    .content {
+      background-color: #2f4461;
+      color: white;
+
+      .ui.input>input {
+        background: transparent;
+        color: white;
+      }
+
+      .ui.form textarea {
+        background: transparent;
+        color: white;
+        border: 1px solid white;
+      }
+
+      .ui.icon.input>i.icon {
+        color: white;
+      }
+
+      .comments {
+
+        .comment {
+          .author {
+            color: white;
+          }
+
+          .text {
+            color: white;
+          }
+
+          .metadata {
+            color: lightgrey;
+          }
+        }
+
+        .header {
+          &.white {
+            color: white;
+          }
+        }
+  
+        .comment {
+          .author, .text {
+            .white {
+              color: white;
+            }
+          }
+  
+          .metadata {
+            &.white {
+              color: lightgrey;
+            }
+          }
+        }
       }
     }
   }

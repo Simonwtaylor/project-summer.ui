@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Menu, Icon, Grid, Image, Label } from 'semantic-ui-react';
+import { Menu, Icon, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser } from '../../redux/user/user.selector';
@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
     return (
       <CurrentTaskDropdown
         name={'taskId'}
-        placeholder={'Task'}
+        placeholder={'Select Current Task'}
         onSelectTask={handleCurrentTask}
         socket={socket}
         selectedTask={currentUser?.currentTask}

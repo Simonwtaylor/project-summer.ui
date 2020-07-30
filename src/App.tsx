@@ -124,34 +124,63 @@ class App extends Component<any, any> {
   }
 
   render() {
+
+    const { visible } = this.state;
+
     return (
       <div className={'app'}>
-        <Navbar
-          onMenuToggle={this.handleMenuToggle}
-          socket={this.socket}
-        />
+        
         <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
-          <NavSidebar
-            visible={this.state.visible && this.loggedIn()}
-            socket={this.socket}
-            onSprintChange={this.handleSprintChange}
-            onSprintSectionChange={this.handleSprintSectionChange}
-          />
-          <Sidebar.Pusher
-            style={{
-              backgroundColor: '#36393f',
-            }}
-          >
-            <Grid style={{ backgroundColor: '#36393f'}}>
-              <Grid.Row>
-                <Grid.Column>
-                  <Switch>
-                    {this.getRouting()}
-                  </Switch>
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          </Sidebar.Pusher>
+          <Grid>
+            <Grid.Row columns={2}>
+              <Grid.Column
+                style={{
+                  display: (visible) ? 'inline-block' : 'none',
+                }}
+                width={2}
+              >
+                <NavSidebar
+                  visible={visible && this.loggedIn()}
+                  socket={this.socket}
+                  onSprintChange={this.handleSprintChange}
+                  onSprintSectionChange={this.handleSprintSectionChange}
+                />
+              </Grid.Column>
+              <Grid.Column
+                width={visible ? 14 : 16}
+              >
+                <Grid>
+                  <Grid.Row columns={1}>
+                    <Grid.Column>
+                      <Navbar
+                        onMenuToggle={this.handleMenuToggle}
+                        socket={this.socket}
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Grid.Row columns={1}>
+                    <Grid.Column>
+                      <Sidebar.Pusher
+                        style={{
+                          backgroundColor: '#36393f',
+                        }}
+                      >
+                        <Grid style={{ backgroundColor: '#36393f'}}>
+                          <Grid.Row>
+                            <Grid.Column>
+                              <Switch>
+                                {this.getRouting()}
+                              </Switch>
+                            </Grid.Column>
+                          </Grid.Row>
+                        </Grid>
+                      </Sidebar.Pusher>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Sidebar.Pushable>
       </div>
     );

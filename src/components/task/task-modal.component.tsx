@@ -291,6 +291,8 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                   style={{
                     width: '100%'
                   }}
+                  icon={'file alternate outline'}
+                  iconPosition={'left'}
                 />
               </Grid.Column>
               <Grid.Column>
@@ -304,6 +306,8 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                   style={{
                     width: '100%'
                   }}
+                  icon='gamepad'
+                  iconPosition='left'
                 />
               </Grid.Column>
             </Grid.Row>
