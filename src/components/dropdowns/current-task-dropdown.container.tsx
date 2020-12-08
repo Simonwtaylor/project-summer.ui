@@ -3,7 +3,7 @@ import { ITask } from '../../lib';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { CustomDropdown } from './index';
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCurrentUser } from '../../redux/';
 
 export interface CurrentTaskDropdownProps {
   socket?: SocketIOClient.Socket;
@@ -12,7 +12,7 @@ export interface CurrentTaskDropdownProps {
   name: string;
   placeholder?: string;
 }
- 
+
 const CurrentTaskDropdown: React.FC<CurrentTaskDropdownProps> = ({
   socket,
   onSelectTask,
@@ -27,7 +27,7 @@ const CurrentTaskDropdown: React.FC<CurrentTaskDropdownProps> = ({
 
   socket?.on('userTasks', (tasks: ITask[]) => {
     options.splice(0, options.length);
-    
+
     tasks.map((task: ITask) => {
       return options.push(
         {
@@ -49,5 +49,5 @@ const CurrentTaskDropdown: React.FC<CurrentTaskDropdownProps> = ({
     />
   );
 }
- 
+
 export default CurrentTaskDropdown;

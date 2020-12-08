@@ -8,7 +8,7 @@ export interface ICustomDropdownProps {
   name: string;
   placeholder?: string;
 }
- 
+
 class CustomDropdown extends React.Component<ICustomDropdownProps> {
   // @ts-ignore
   handleSelectChange = (e: any, data: any) => {
@@ -42,5 +42,5 @@ class CustomDropdown extends React.Component<ICustomDropdownProps> {
     )
   }
 }
- 
+
 export default CustomDropdown;

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { SignIn } from '../components/sign-in/';
+import { SignIn } from '../components/';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../redux/user/user.selector';
+import { selectCurrentUser } from '../redux/index';
 
 export interface ILoginPageProps extends RouteComponentProps<any> {
 
@@ -28,6 +28,6 @@ const LoginPage: React.FC<ILoginPageProps> = ({
       <SignIn />
     </div>
   );
-}
+};
 
 export default withRouter(LoginPage);

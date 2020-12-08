@@ -31,11 +31,11 @@ const UserDropdownContainer: React.FC<IUserDropdownContainerProps> = ({
           key: id, 
           value: id, 
           text: displayName,
-          image: photoURL
+          image: photoURL,
         }
       );
     });
-  })
+  });
 
   return (
     <CustomDropdown 
@@ -47,5 +47,5 @@ const UserDropdownContainer: React.FC<IUserDropdownContainerProps> = ({
     />
   );
 };
- 
+
 export default UserDropdownContainer;

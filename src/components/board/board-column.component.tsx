@@ -11,7 +11,7 @@ export interface IBoardColumnProps extends RouteComponentProps {
   items: ITask[];
   onAddNewTask: (title: string, boardId: number) => void;
 }
- 
+
 const BoardColumn: React.FC<IBoardColumnProps> = ({
   name,
   droppableId,
@@ -69,7 +69,7 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
               style={{
                 cursor: 'pointer',
                 color: 'green',
-                marginLeft: '10px'
+                marginLeft: '10px',
               }}
               onClick={() => setNewTask(!newTask)}
             />
@@ -186,5 +186,5 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
     </Grid.Column>
   );
 }
- 
+
 export default withRouter(BoardColumn);

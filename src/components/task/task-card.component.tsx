@@ -9,7 +9,7 @@ export interface ITaskCardProps {
   index: number;
   onCardClick: (id: number) => void;
 }
- 
+
 const TaskCard: React.FC<ITaskCardProps> = ({
   task,
   index,
@@ -29,19 +29,19 @@ const TaskCard: React.FC<ITaskCardProps> = ({
     padding: 8 * 2,
     margin: `0 0 ${8}px 0`,
     background: isDragging ? '#008592' : '',
-    ...draggableStyle
+    ...draggableStyle,
   });
 
   const getDueDate = () => {
     if (dueDate) {
       return (
         <span>{moment(dueDate).format("Do MMM")}</span>
-      )
+      );
     } 
 
     return <></>;
   }
-  
+
   return (
     <Draggable
       key={id}
@@ -50,24 +50,18 @@ const TaskCard: React.FC<ITaskCardProps> = ({
       {(provided: any, snapshot: any) => (
         <div
           onClick={() => onCardClick(+id)}
-          className={`card ui ${
-            completed ? 'green' : ''
-          }`}
+          className={`card ui ${completed ? 'green' : ''}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={getItemStyle(
             snapshot.isDragging,
-            provided.draggableProps.style
+            provided.draggableProps.style,
           )}>
             <Grid>
               <Grid.Row columns={2}>
                 <Grid.Column width={13}>
-                  <span
-                    style={{
-                      verticalAlign: 'center'
-                    }}
-                  >
+                  <span style={{verticalAlign: 'center'}}>
                     {title}
                   </span>
                 </Grid.Column>
@@ -82,10 +76,7 @@ const TaskCard: React.FC<ITaskCardProps> = ({
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row columns={3}>
-                <Grid.Column
-                  width={4}
-
-                >
+                <Grid.Column width={4}>
                   {(user && (
                     <Popup
                       content={user.displayName}
@@ -103,10 +94,7 @@ const TaskCard: React.FC<ITaskCardProps> = ({
                     />)
                   )}
                 </Grid.Column>
-                <Grid.Column
-                  width={5}
-                >
-                  
+                <Grid.Column width={5}>
                 </Grid.Column>
                 <Grid.Column
                   width={7}
@@ -122,6 +110,6 @@ const TaskCard: React.FC<ITaskCardProps> = ({
       )}
     </Draggable>
   );
-}
- 
+};
+
 export default TaskCard;

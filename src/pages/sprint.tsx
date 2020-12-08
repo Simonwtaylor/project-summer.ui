@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { selectCurrentSprint } from '../redux/sprint/sprint.selector';
+import { selectCurrentSprint } from '../redux/index';
 import { Grid } from 'semantic-ui-react';
 import { SprintBoard } from '../components/sprint';
 import { ROUTER_ENUMS } from '../lib/enums';
-
 
 export interface ISprintPageProps {
   socket?: SocketIOClient.Socket;
@@ -24,14 +23,14 @@ const SprintPage: React.FC<ISprintPageProps> = ({
         <Grid.Row>
           <Grid.Column>
             <h3
-              style={{color: 'white', textAlign: 'center', margin: '30px'}}
+              style={{ color: 'white', textAlign: 'center', margin: '30px' }}
             >
               Please select a sprint
             </h3>
           </Grid.Column>
         </Grid.Row>
       </Grid>
-    )
+    );
   }
 
   return (
@@ -40,7 +39,7 @@ const SprintPage: React.FC<ISprintPageProps> = ({
       sprintId={currentSprint.id}
       sprintState={sprintState}
     />
-  )
+  );
 }
  
 export default SprintPage;

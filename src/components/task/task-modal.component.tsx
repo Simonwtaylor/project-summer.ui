@@ -27,7 +27,7 @@ export interface ITaskModalProps {
   onCompleteChange: () => void;
   onDueDateChange: (dueDate?: Date) => void;
 }
- 
+
 const TaskModal: React.FC<ITaskModalProps> = ({
   id,
   title,
@@ -65,19 +65,19 @@ const TaskModal: React.FC<ITaskModalProps> = ({
 
   React.useEffect(() => {
     if (!descFocus) {
-      setDescription(description)
+      setDescription(description);
     }
   }, [description, descFocus]);
 
   React.useEffect(() => {
     if (!titleFocus) {
-      setNewTitle(title)
+      setNewTitle(title);
     }
   }, [title, titleFocus]);
 
   React.useEffect(() => {
     if (!storyFocus) {
-      setNewStoryPoints(storyPoints)
+      setNewStoryPoints(storyPoints);
     }
   }, [storyPoints, storyFocus]);
 
@@ -104,9 +104,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     if (!user || changeUser) {
       return (
         <div
-          style={{
-            marginBottom: '10px'
-          }}
+          style={{ marginBottom: '10px' }}
         >
           <UserDropdownContainer
             name={'userId'}
@@ -116,7 +114,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
             placeholder={'Please select a user'}
           />
         </div>
-      )
+      );
     }
 
     return <></>;
@@ -147,30 +145,26 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           as='a'
           color='blue'
           icon={true}
-          style={{
-            cursor: 'pointer',
-          }}
+          style={{ cursor: 'pointer' }}
           onClick={() => setShowDueDate(!showDueDate)}
         >
           <Icon name={'calendar check'} />
           <Label.Detail>Due {moment(dueDate).fromNow()}</Label.Detail>
         </Label>
-      )
+      );
     } else {
       return (
         <Label
           as='a'
           color='blue'
           icon={true}
-          style={{
-            cursor: 'pointer',
-          }}
+          style={{ cursor: 'pointer' }}
           onClick={() => setShowDueDate(!showDueDate)}
         >
           <Icon name={'calendar check'} />
           <Label.Detail>Set Due Date</Label.Detail>
         </Label>
-      )
+      );
     }
   };
 
@@ -207,7 +201,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
             />
           }
         />
-      )
+      );
     }
 
     return (
@@ -227,7 +221,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           />
         }
       />
-    )
+    );
   }
 
   return (
@@ -250,7 +244,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                 size={'tiny'}
                 style={{
                   width: '45px',
-                  display: 'inline-block'
+                  display: 'inline-block',
                 }}
               />
             }
@@ -260,7 +254,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           style={{
             display: 'inline-block',
             marginLeft: '30px',
-            border: 'none'
+            border: 'none',
           }}
           onChange={handleTitleChange}
           onFocus={() => setTitleFocus(true)}
@@ -288,9 +282,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                   onFocus={() => setDescFocus(true)}
                   onBlur={() => setDescFocus(false)}
                   placeholder={'Description'}
-                  style={{
-                    width: '100%'
-                  }}
+                  style={{ width: '100%' }}
                   icon={'file alternate outline'}
                   iconPosition={'left'}
                 />
@@ -303,9 +295,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                   onBlur={() => setStoryFocus(false)}
                   placeholder={'Story Points'}
                   type={'number'}
-                  style={{
-                    width: '100%'
-                  }}
+                  style={{ width: '100%' }}
                   icon='gamepad'
                   iconPosition='left'
                 />
@@ -320,6 +310,6 @@ const TaskModal: React.FC<ITaskModalProps> = ({
       </Modal.Content>
     </Modal>
   );
-}
- 
+};
+
 export default TaskModal;

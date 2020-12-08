@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector } from 'react-redux';
-import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
 import { Grid, Label, Icon } from 'semantic-ui-react';
 import { BoardColumn } from '../board';
-import { ISprint, IBoard, ITask } from '../../lib';
-import { ROUTER_ENUMS } from '../../lib/enums/router.enums';
-import { DateService } from '../../lib/services/date.service';
+import { ISprint, IBoard, ITask, ROUTER_ENUMS, DateService } from '../../lib';
 import Comments from '../comments/comments.component';
 import { useParams } from 'react-router-dom';
 import { TaskModalContainer } from '../task';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCurrentUser, selectCurrentSprint } from '../../redux/index';
 import ActivityList from '../activity/activity-list.component';
 
 const { SPRINT, SPRINT_ACTIVITY, SPRINT_CHAT, SPRINT_STATS } = ROUTER_ENUMS;
@@ -28,7 +25,7 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 }) => {
   const [boards, setBoards] = React.useState<IBoard[]>([]);
 
-  const { id } = useParams();
+  const { id } = useParams<any>();
   const currentSprint: ISprint = useSelector(selectCurrentSprint);
   const currentUser = useSelector(selectCurrentUser);
 
@@ -60,16 +57,16 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
       
       const boardsToEdit = [...boards];
       const board = boardsToEdit
-      .find(
-        a => a.id === +source.droppableId
-      );
+        .find(
+          a => a.id === +source.droppableId
+        );
 
       const taskToAdd = board?.tasks.find(a => a.id === draggableId);
       
       const removeFrom = board?.tasks
-      .findIndex(
-        a => a.id === draggableId,
-      );
+        .findIndex(
+          a => a.id === draggableId,
+        );
 
       if (removeFrom) {
         boardsToEdit.find(
@@ -84,12 +81,13 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
         boardsToEdit.find(a => a.id === +destination.droppableId)?.tasks.push(taskToAdd);
       }
 
-      socket?.emit('updateTaskBoardBySprint',
+      socket?.emit(
+        'updateTaskBoardBySprint',
         {
           sprintId: sprintId,
           taskId: draggableId,
           boardId: destination.droppableId,
-        }
+        },
       );
     }
   };
@@ -128,12 +126,12 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
   const getModal = () => {
     if (id) {
       return (
-       <TaskModalContainer
+        <TaskModalContainer
           id={+id}
           socket={socket}
           onClose={handleTaskModalClose}
-       />
-      )
+        />
+      );
     }
     return <></>;
   };
@@ -192,21 +190,17 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
           ...activity,
           taskName: task.title,
           taskId: +task.id,
-        }))
-      })
+        }));
+      });
     });
 
     switch(sprintState) {
       case SPRINT_ACTIVITY:
         return(
-          <>
-            <ActivityList
-              activities={
-                activities
-              }
-              colourClass={'white'}
-            />
-          </>
+          <ActivityList
+            activities={activities}
+            colourClass={'white'}
+          />
         );
       case SPRINT_CHAT:
         return(
@@ -270,6 +264,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
       {renderContent()}
     </div>
   );
-}
+};
  
 export default SprintBoard;

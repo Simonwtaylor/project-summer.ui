@@ -22,18 +22,18 @@ const SprintDropdownContainer: React.FC<ISprintDropdownContainerProps> = ({
   const options: DropdownItemProps[] = [];
   socket?.emit('getSprints');
 
-  socket?.on('sprints', (data: any[]) => {
+  socket?.on('sprints', (data: ISprint[]) => {
     options.splice(0, options.length);
     data.map((sprint: ISprint) => {
       return options.push(
         {
           key: sprint.id, 
           value: sprint.id, 
-          text: sprint.name
-        }
+          text: sprint.name,
+        },
       );
     });
-  })
+  });
 
   return (
     <CustomDropdown 
@@ -45,5 +45,5 @@ const SprintDropdownContainer: React.FC<ISprintDropdownContainerProps> = ({
     />
   );
 };
- 
+
 export default SprintDropdownContainer;

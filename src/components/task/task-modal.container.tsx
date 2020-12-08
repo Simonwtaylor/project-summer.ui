@@ -3,15 +3,14 @@ import { default as TaskModal } from './task-modal.component';
 import { ITask } from '../../lib/types';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selector';
-import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
+import { selectCurrentUser, selectCurrentSprint } from '../../redux/index';
 
 export interface ITaskModalContainerProps extends RouteComponentProps {
   id: number;
   socket?: SocketIOClient.Socket;
   onClose: () => void;
 }
- 
+
 const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   id,
   socket,
@@ -31,7 +30,6 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
 
   React.useEffect(() => {
     socket?.on('task', (task: ITask) => {
-      console.log(task);
       setModalTask(task);
     });
   }, [socket, modalTask]);
@@ -47,7 +45,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   };
 
   const handleDescriptionChange = (description: string) => {
-    console.log(`task ${id} description changed to ${description}`)
+    console.log(`task ${id} description changed to ${description}`);
     socket?.emit('updateTaskDescription', { taskId: id, description });
   };
 
@@ -62,22 +60,22 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   };
 
   const handleCommentAdd = (content: string) => {
-    console.log(`task ${id} title has comment added to`)
+    console.log(`task ${id} title has comment added to`);
     socket?.emit('addCommentToTask', { taskId: id, content, uid: currentUser.uid });
   };
 
   const handleStoryPointsChange = (storyPoints: number) => {
-    console.log(`task ${id} story points changed to ${storyPoints}`)
+    console.log(`task ${id} story points changed to ${storyPoints}`);
     socket?.emit('updateTaskStoryPoints', { taskId: id, storyPoints });
   };
 
   const handleCompleteChange = () => {
-    console.log(`task ${id} complete change`)
+    console.log(`task ${id} complete change`);
     socket?.emit('updateTaskComplete', { taskId: id, sprintId });
   };
 
   const handleDueDateChange = (dueDate?: Date) => {
-    console.log(`task ${id} complete change`)
+    console.log(`task ${id} complete change`);
     socket?.emit('updateTaskDueDate', { taskId: id, sprintId, dueDate });
   };
 
@@ -94,7 +92,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
       onCompleteChange={handleCompleteChange}
       onDueDateChange={handleDueDateChange}
     />
-  )
-}
- 
+  );
+};
+
 export default withRouter(TaskModalContainer);

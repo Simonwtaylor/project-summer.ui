@@ -2,12 +2,12 @@ import * as React from 'react';
 import { auth } from '../../firebase/firebase.utils';
 import { Icon, Button } from 'semantic-ui-react';
 import { useDispatch } from 'react-redux';
-import { googleSignInStart } from '../../redux/user/user.action';
+import { googleSignInStart } from '../../redux/index';
 
 export interface ISignInProps {
   
 }
- 
+
 const SignIn: React.FC<ISignInProps> = () => {
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const SignIn: React.FC<ISignInProps> = () => {
           src={auth.currentUser.photoURL}
           alt="profile sign in"
         />
-      )
+      );
     }
     return <></>;
   };
@@ -42,6 +42,6 @@ const SignIn: React.FC<ISignInProps> = () => {
       </Button>
     </div>
   );
-}
- 
+};
+
 export default SignIn;

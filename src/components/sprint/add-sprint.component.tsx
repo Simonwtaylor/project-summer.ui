@@ -7,7 +7,7 @@ export interface AddSprintProps {
   onModalClose: () => void;
   onAddSprint: (sprint: any) => void;
 }
- 
+
 const AddSprint: React.FC<AddSprintProps> = ({
   show,
   onModalClose,
@@ -55,7 +55,7 @@ const AddSprint: React.FC<AddSprintProps> = ({
                 placeholder={'Sprint Name'}
                 style={{
                   paddingLeft: '5px',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -70,7 +70,6 @@ const AddSprint: React.FC<AddSprintProps> = ({
                 endDate={endDate}
                 endDateId={"endDate"}
                 onDatesChange={({ startDate: startDateInput, endDate: endDateInput }) => {
-                  
                   if (startDateInput) {
                     setStartDate(startDateInput);
                   }
@@ -80,15 +79,14 @@ const AddSprint: React.FC<AddSprintProps> = ({
                   }
                 }}
                 onClose={() => {
-                  setfocusedDate(null)
+                  setfocusedDate(null);
                 }}
                 focusedInput={focusedDate}
                 onFocusChange={(focus) => {
                   if (focus) {
-                    setfocusedDate(focus)
+                    setfocusedDate(focus);
                   }
                 }}
-
               />
             </Grid.Column>
           </Grid.Row>
@@ -98,7 +96,7 @@ const AddSprint: React.FC<AddSprintProps> = ({
                 placeholder={'Prefix'}
                 style={{
                   paddingLeft: '5px',
-                  paddingRight: '5px'
+                  paddingRight: '5px',
                 }}
                 value={prefix}
                 onChange={(e) => setPrefix(e.target.value)}
@@ -110,7 +108,7 @@ const AddSprint: React.FC<AddSprintProps> = ({
               <Button
                 style={{
                   marginLeft: '5px',
-                  marginRight: '5px'
+                  marginRight: '5px',
                 }}
                 onClick={handleSubmit}
                 className="button green"
@@ -124,6 +122,6 @@ const AddSprint: React.FC<AddSprintProps> = ({
     </Modal.Content>
   </Modal>
   );
-}
+};
 
 export default AddSprint;

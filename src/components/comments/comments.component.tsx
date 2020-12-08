@@ -8,7 +8,7 @@ export interface ICommentsProps {
 	onCommentSubmit: (content: string) => void;
 	colourClass?: string;
 }
- 
+
 const Comments: React.FC<ICommentsProps> = ({
 	comments,
 	onCommentSubmit,
@@ -77,5 +77,5 @@ const Comments: React.FC<ICommentsProps> = ({
 		</Comment.Group>
 	);
 }
- 
+
 export default Comments;

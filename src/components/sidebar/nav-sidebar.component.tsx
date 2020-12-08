@@ -3,9 +3,7 @@ import { Sidebar, Menu, Icon, Popup, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
-import { selectCurrentUser } from '../../redux/user/user.selector';
-import { setCurrentUser } from '../../redux/user/user.action';
+import { selectCurrentSprint, selectCurrentUser, setCurrentUser } from '../../redux/index';
 import AddSprint from '../sprint/add-sprint.component';
 import { ROUTER_ENUMS } from '../../lib/enums';
 

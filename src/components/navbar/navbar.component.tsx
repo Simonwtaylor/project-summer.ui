@@ -2,15 +2,14 @@ import * as React from 'react';
 import { Menu, Icon, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selector';
+import { selectCurrentUser, setCurrentUser } from '../../redux/index';
 import CurrentTaskDropdown from '../dropdowns/current-task-dropdown.container';
-import { setCurrentUser } from '../../redux/user/user.action';
 
 export interface NavbarProps {
   onMenuToggle: () => void;
   socket?: SocketIOClient.Socket;
 }
- 
+
 const Navbar: React.FC<NavbarProps> = ({
   onMenuToggle,
   socket,
@@ -43,7 +42,7 @@ const Navbar: React.FC<NavbarProps> = ({
           }}
         />
       </>
-    )
+    );
   };
 
   const getCurrentTask = () => {
@@ -65,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({
         </Label>
       );
     }
-    
+
     return (
       <CurrentTaskDropdown
         name={'taskId'}
@@ -74,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({
         socket={socket}
         selectedTask={currentUser?.currentTask}
       />
-    )
+    );
   };
 
   return (
@@ -108,6 +107,6 @@ const Navbar: React.FC<NavbarProps> = ({
       </Menu.Item>
     </Menu>
   );
-}
- 
+};
+
 export default Navbar;

@@ -2,12 +2,11 @@ import * as React from 'react';
 import { Card, Header, Icon, Image, Popup } from 'semantic-ui-react';
 import moment from 'moment';
 
-
 export interface IActivityListProps {
 	activities: any[];
 	colourClass: string;
 }
- 
+
 const ActivityList: React.FC<IActivityListProps> = ({
 	activities,
 	colourClass,
@@ -29,9 +28,7 @@ const ActivityList: React.FC<IActivityListProps> = ({
 			{activities.map(
 				(activity) => {
 					return (
-						<Card
-
-						>
+						<Card>
 							<Card.Header
 								style={{
 									padding: '8px 16px',
@@ -41,7 +38,7 @@ const ActivityList: React.FC<IActivityListProps> = ({
 							</Card.Header>
 							<Card.Description
 								style={{
-									padding: '8px 16px'
+									padding: '8px 16px',
 								}}
 							>
 								{activity.content}
@@ -72,5 +69,5 @@ const ActivityList: React.FC<IActivityListProps> = ({
 		</div>
 	);
 }
- 
+
 export default ActivityList;

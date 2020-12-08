@@ -2,13 +2,12 @@ import * as React from 'react';
 import { SprintDropdownContainer } from '../dropdowns/index';
 import { ISprint } from '../../lib/types';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentSprint } from '../../redux/sprint/sprint.action';
-import { selectCurrentSprint } from '../../redux/sprint/sprint.selector';
+import { setCurrentSprint, selectCurrentSprint } from '../../redux/index';
 
 export interface SprintSelectorProps {
   socket?: SocketIOClient.Socket;
 }
- 
+
 const SprintSelector: React.FC<SprintSelectorProps> = ({
   socket,
 }) => {
@@ -35,5 +34,5 @@ const SprintSelector: React.FC<SprintSelectorProps> = ({
     />
   );
 }
- 
+
 export default SprintSelector;

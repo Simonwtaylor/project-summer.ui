@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import { HomePage, LoginPage, SprintPage } from './pages/index';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { Grid, Sidebar, Segment } from 'semantic-ui-react';
-import { Navbar } from './components/navbar/';
+import { Navbar, NavSidebar } from './components/';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { setCurrentUser } from './redux/user/user.action';
+import { setCurrentUser, selectCurrentUser, setCurrentSprint } from './redux/index';
 import { auth, createUserProfileDocument } from './firebase/firebase.utils';
-import { selectCurrentUser } from './redux/user/user.selector';
 import socketIOClient from 'socket.io-client';
-import NavSidebar from './components/sidebar/nav-sidebar.component';
-import { setCurrentSprint } from './redux/sprint/sprint.action';
 import { ROUTER_ENUMS } from './lib/enums';
 
 class App extends Component<any, any> {
@@ -23,7 +20,7 @@ class App extends Component<any, any> {
     this.state = {
       visible: true,
       sprintState: ROUTER_ENUMS.SPRINT,
-    }
+    };
 
     this.setVisible = this.setVisible.bind(this);
     this.handleMenuToggle = this.handleMenuToggle.bind(this);
@@ -45,7 +42,7 @@ class App extends Component<any, any> {
             ...userRef,
             ...user,
           });
-          
+
           this.socket = socketIOClient(
             process.env.REACT_APP_SOCKET_URL || 'http://localhost:3001', {
             query: {
@@ -56,7 +53,7 @@ class App extends Component<any, any> {
           this.socket?.emit('joinUserRoom', { id: userRef.id });
         }
       }
-      
+
       setCurrentUser({
         ...this.props.currentUser,
         ...user,
@@ -68,7 +65,7 @@ class App extends Component<any, any> {
     this.setState({
       ...this.state,
       visible,
-    })
+    });
   }
 
   private handleMenuToggle() {
@@ -113,10 +110,12 @@ class App extends Component<any, any> {
       );
     }
     
+    const { sprintState } = this.state;
+
     return (
       <>
-        <Route path="/sprint/:id" render={() => <SprintPage sprintState={this.state.sprintState} socket={this.socket} />}  />
-        <Route path="/sprint" exact render={() => <SprintPage sprintState={this.state.sprintState} socket={this.socket} />}  />
+        <Route path="/sprint/:id" render={() => <SprintPage sprintState={sprintState} socket={this.socket} />}  />
+        <Route path="/sprint" exact render={() => <SprintPage sprintState={sprintState} socket={this.socket} />}  />
         <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
         <Redirect from="/" exact to="/sprint" />
       </>
