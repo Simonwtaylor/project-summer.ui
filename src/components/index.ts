@@ -1,6 +1,7 @@
 export * from './activity/index';
 export * from './board/index';
 export * from './comments/index';
+export * from './dashboard/index';
 export * from './dropdowns/index';
 export * from './navbar/index';
 export * from './sidebar/index';

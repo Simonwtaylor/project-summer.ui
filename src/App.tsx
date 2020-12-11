@@ -97,7 +97,7 @@ class App extends Component<any, any> {
     this.setState({
       ...this.state,
       sprintState,
-    })
+    });
   }
 
   private getRouting() {
@@ -109,7 +109,7 @@ class App extends Component<any, any> {
         </>
       );
     }
-    
+
     const { sprintState } = this.state;
 
     return (
@@ -128,7 +128,6 @@ class App extends Component<any, any> {
 
     return (
       <div className={'app'}>
-        
         <Sidebar.Pushable as={Segment} style={{ margin: '0', background: 'none'}}>
           <Grid>
             <Grid.Row columns={2}>
@@ -185,7 +184,6 @@ class App extends Component<any, any> {
     );
   }
 }
-
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,

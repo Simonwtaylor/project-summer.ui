@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Menu, Icon, Image, Label } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser, setCurrentUser } from '../../redux/index';
 import CurrentTaskDropdown from '../dropdowns/current-task-dropdown.container';
 
-export interface NavbarProps {
+export interface NavbarProps extends RouteComponentProps<any> {
   onMenuToggle: () => void;
   socket?: SocketIOClient.Socket;
 }
@@ -13,6 +13,7 @@ export interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({
   onMenuToggle,
   socket,
+  history,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({
             display: 'inline-block',
             marginLeft: '7px',
           }}
+          onClick={() => history.push('/home')}
         />
       </>
     );
@@ -109,4 +111,4 @@ const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
-export default Navbar;
+export default withRouter(Navbar);

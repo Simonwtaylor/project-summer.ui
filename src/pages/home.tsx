@@ -1,13 +1,26 @@
 import * as React from 'react';
+import { Grid } from 'semantic-ui-react';
+import { UserDashboardContainer } from '../components/index';
 
 export interface IHomePageProps {
   socket?: SocketIOClient.Socket;
 }
 
-const HomePage: React.FC<IHomePageProps> = ({
+const homePage: React.FC<IHomePageProps> = ({
   socket,
 }) => {
-  return <h1>Hello World</h1>;
+  return (
+    <div className={'home page'}>
+      <h1>Your Dashboard</h1>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column>
+            <UserDashboardContainer socket={socket} />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </div>
+  );
 };
 
-export default HomePage;
+export default homePage;
