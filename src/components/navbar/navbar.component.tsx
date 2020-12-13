@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Menu, Icon, Image, Label } from 'semantic-ui-react';
+import { Menu, Icon, Image } from 'semantic-ui-react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentUser, setCurrentUser } from '../../redux/index';
-import CurrentTaskDropdown from '../dropdowns/current-task-dropdown.container';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../redux/index';
 
 export interface NavbarProps extends RouteComponentProps<any> {
   onMenuToggle: () => void;
@@ -12,18 +11,9 @@ export interface NavbarProps extends RouteComponentProps<any> {
 
 const Navbar: React.FC<NavbarProps> = ({
   onMenuToggle,
-  socket,
   history,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
-  const dispatch = useDispatch();
-
-  const handleCurrentTask = (task: any) => {
-    socket?.emit('updateUserAssignedTask', { 
-      userId: currentUser.id,
-      taskId: task.value,
-    });
-  };
 
   const getUserProfile = () => {
     if (!currentUser) {
@@ -37,44 +27,13 @@ const Navbar: React.FC<NavbarProps> = ({
           circular={true}
           size={'tiny'}
           style={{
-            width: '70px',
+            width: '35px',
             display: 'inline-block',
             marginLeft: '7px',
           }}
           onClick={() => history.push('/home')}
         />
       </>
-    );
-  };
-
-  const getCurrentTask = () => {
-    if (currentUser?.currentTask) {
-      return (
-        <Label
-          as={'a'}
-          color='teal'
-          icon={true}
-          onClick={() => dispatch(setCurrentUser({ ...currentUser, currentTask: null }))}
-          style={{
-            float: 'none',
-            width: '100%',
-            marginTop: '4px',
-          }}
-        >
-          <Icon name={'check circle outline'} />
-          {currentUser.currentTask.title}
-        </Label>
-      );
-    }
-
-    return (
-      <CurrentTaskDropdown
-        name={'taskId'}
-        placeholder={'Select Current Task'}
-        onSelectTask={handleCurrentTask}
-        socket={socket}
-        selectedTask={currentUser?.currentTask}
-      />
     );
   };
 
@@ -104,7 +63,6 @@ const Navbar: React.FC<NavbarProps> = ({
       <Menu.Item
         position={'right'}
       >
-        {getCurrentTask()}
         {getUserProfile()}
       </Menu.Item>
     </Menu>

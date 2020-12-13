@@ -10,9 +10,6 @@ const taskList: React.FC<TaskListProps> = ({
 }) => {
   return (
     <>
-      <h3>
-        Task Lists
-      </h3>
       <div>
         <ul>
           {tasks.map((task: ITask) => {

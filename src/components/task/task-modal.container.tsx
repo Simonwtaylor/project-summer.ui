@@ -9,6 +9,7 @@ export interface ITaskModalContainerProps extends RouteComponentProps {
   id: number;
   socket?: SocketIOClient.Socket;
   onClose: () => void;
+  locationOnClose?: string;
 }
 
 const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
@@ -16,6 +17,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   socket,
   history,
   onClose,
+  locationOnClose,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const { id: sprintId } = useSelector(selectCurrentSprint);
@@ -41,7 +43,7 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   const handleModalClose = () => {
     socket?.emit('exitTaskRoom', { id });
     onClose();
-    history.push('/sprint');
+    history.push(locationOnClose || '/sprint');
   };
 
   const handleDescriptionChange = (description: string) => {

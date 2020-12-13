@@ -31,7 +31,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
 
   React.useEffect(() => {
     if (socket) {
-      socket.emit('joinSprintRoom', { id: sprintId });
       socket.emit('getSprint', { id: sprintId });
     }
   }, [socket, sprintId])

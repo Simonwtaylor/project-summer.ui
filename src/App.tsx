@@ -117,7 +117,7 @@ class App extends Component<any, any> {
         <Route path="/sprint/:id" render={() => <SprintPage sprintState={sprintState} socket={this.socket} />}  />
         <Route path="/sprint" exact render={() => <SprintPage sprintState={sprintState} socket={this.socket} />}  />
         <Route path={'/home'} render={() => <HomePage socket={this.socket} />} />
-        <Redirect from="/" exact to="/sprint" />
+        <Redirect from="/" exact to="/home" />
       </>
     );
   }

@@ -22,4 +22,21 @@
   .board.col.draggable {
     overflow-y: scroll;
   }
+
+  .home.page {
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+
+    .user.dashboard {
+      .title {
+        span {
+          font-size: 18px;
+          font-weight: 700;
+          margin-left: 7px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
 }

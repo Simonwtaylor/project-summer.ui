@@ -10,8 +10,9 @@ const homePage: React.FC<IHomePageProps> = ({
   socket,
 }) => {
   return (
-    <div className={'home page'}>
-      <h1>Your Dashboard</h1>
+    <div
+      className={'home page'}
+    >
       <Grid>
         <Grid.Row>
           <Grid.Column>
