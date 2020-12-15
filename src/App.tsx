@@ -51,13 +51,27 @@ class App extends Component<any, any> {
           });
 
           this.socket?.emit('joinUserRoom', { id: userRef.id });
+          setCurrentUser({
+            id: userRef.id, 
+            ...userRef,
+            ...user,
+            roomJoined: true,
+          });
+
+          this.socket?.on('user', (user: any) => {
+            setCurrentUser({
+              ...userRef,
+              ...user,
+              id: userRef.id,
+            });
+          });
         }
       }
 
-      setCurrentUser({
-        ...this.props.currentUser,
-        ...user,
-      });
+      // setCurrentUser({
+      //   ...this.props.currentUser,
+      //   ...user,
+      // });
     });
   }
 

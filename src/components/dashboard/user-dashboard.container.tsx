@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ISprint, ITask } from '../../lib';
+import { ITask } from '../../lib';
 import { TaskList, TaskModalContainer } from '../task';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentUser, setCurrentSprint } from '../../redux/index';
+import { useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../redux/index';
 import CurrentTaskDropdown from '../dropdowns/current-task-dropdown.container';
 import { Grid, Icon, Label, Image } from 'semantic-ui-react';
 
@@ -14,7 +14,6 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
   socket,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
-  const dispatch = useDispatch();
   const [userTasks, setUserTasks] = React.useState<any[]>([]);
   const [loaded, setLoaded] = React.useState(false);
   const [showTaskModal, setShowTaskModal] = React.useState(false);
@@ -26,7 +25,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
   };
 
   React.useEffect(() => {
-    if (socket) {
+    if (socket && currentUser?.roomJoined) {
       socket.emit('joinUserDashboardRoom');
       socket.emit('getUserDashboard');
       socket.on('userDashboard', ({ tasks }: { tasks: ITask[] }) => {
@@ -37,7 +36,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
     return () => {
       socket?.emit('exitUserDashboardRoom')
     }
-  }, [socket, showTaskModal]);
+  }, [socket, showTaskModal, currentUser]);
 
   const getUserProfile = () => {
     if (!currentUser) {
@@ -66,13 +65,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
   };
 
   const setupTaskModal = () => {
-    socket?.emit('joinSprintRoom', { id: currentUser?.currentTask.sprintId });
-    socket?.emit('getSprint', { id: currentUser?.currentTask.sprintId });
-
-    socket?.on('sprint', (sprint: ISprint) => {
-      dispatch(setCurrentSprint(sprint));
-      setShowTaskModal(true);
-    });
+    setShowTaskModal(true);
   };
 
   const getTaskModal = () => {
@@ -83,13 +76,14 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
           socket={socket}
           onClose={handleTaskModalClose}
           locationOnClose={'/home'}
+          sprintId={currentUser?.currentTask.sprintId}
         />
       );
     }
   };
 
   const getCurrentTask = () => {
-    if (currentUser?.currentTask) {
+    if (currentUser?.currentTask?.id) {
       return (
         <Label
           as={'a'}
@@ -115,7 +109,10 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
         placeholder={'🤔 What are you working on?'}
         onSelectTask={handleCurrentTask}
         socket={socket}
-        selectedTask={currentUser?.currentTask}
+        selectedTask={
+          (Object.keys(currentUser?.currentTask).length > 0) ?
+          currentUser?.currentTask : undefined
+        }
       />
     );
   };
@@ -129,7 +126,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
               {getUserProfile()}
               <span className={'greeting'}>Welcome {currentUser.displayName},</span>
             </Grid.Column>
-            <Grid.Column width={currentUser?.currentTask ? 2 : 4}>
+            <Grid.Column width={currentUser?.currentTask?.id ? 2 : 4}>
               {getCurrentTask()}
             </Grid.Column>
           </Grid.Row>

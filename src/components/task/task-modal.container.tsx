@@ -10,6 +10,7 @@ export interface ITaskModalContainerProps extends RouteComponentProps {
   socket?: SocketIOClient.Socket;
   onClose: () => void;
   locationOnClose?: string;
+  sprintId?: number,
 }
 
 const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
@@ -18,13 +19,15 @@ const TaskModalContainer: React.FC<ITaskModalContainerProps> = ({
   history,
   onClose,
   locationOnClose,
+  sprintId,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
-  const { id: sprintId } = useSelector(selectCurrentSprint);
+  const currentSprint = useSelector(selectCurrentSprint);
+  if (currentSprint && !sprintId) sprintId = currentSprint.id;
   const [modalTask, setModalTask] = React.useState<ITask|undefined>(undefined);
 
   React.useEffect(() => {
-    if (socket) {
+    if (socket && id) {
       socket.emit('joinTaskRoom', { id });
       socket.emit('getTask', { id });
     }

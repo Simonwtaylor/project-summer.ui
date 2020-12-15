@@ -3,7 +3,7 @@ import { Sidebar, Menu, Icon, Popup, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { SprintSelector } from '../sprint/index';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCurrentSprint, selectCurrentUser, setCurrentUser } from '../../redux/index';
+import { selectCurrentSprint, selectCurrentUser } from '../../redux/index';
 import AddSprint from '../sprint/add-sprint.component';
 import { ROUTER_ENUMS } from '../../lib/enums';
 
@@ -25,7 +25,6 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
 
   const currentSprint = useSelector(selectCurrentSprint);
   const currentUser = useSelector(selectCurrentUser);
-  const dispatch = useDispatch();
 
   const [addSprint, setAddSprint] = React.useState(false);
 
@@ -34,15 +33,6 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       ...sprint,
     });
   };
-
-  if (currentUser) {
-    socket?.on('user', (user: any) => {
-      dispatch(setCurrentUser({
-        ...currentUser,
-        ...user,
-      }));
-    });
-  }
 
   const getSprintSection = () => {
     if (currentSprint) {
