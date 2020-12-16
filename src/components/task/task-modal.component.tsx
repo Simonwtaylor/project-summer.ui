@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Modal, Input, Popup, Image, Grid, Icon, Label } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
-import { IUser, IComment } from '../../lib';
+import { IUser, IComment, IBoard } from '../../lib';
 import Comments from '../comments/comments.component';
 import { SingleDatePicker } from 'react-dates';
 import moment from 'moment';
@@ -10,6 +10,7 @@ export interface ITaskModalProps {
   id: string;
   title: string;
   boardId?: string;
+  board?: IBoard;
   description?: string;
   completed?: boolean;
   dateAdded?: Date;
@@ -32,6 +33,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   id,
   title,
   boardId,
+  board,
   description,
   dateAdded,
   dueDate,
@@ -118,6 +120,17 @@ const TaskModal: React.FC<ITaskModalProps> = ({
     }
 
     return <></>;
+  };
+
+  const getAssignedSprint = () => {
+    if (board?.sprint) {
+      return (
+        <Label as='a' image>
+          <Icon name={'lightning'} />
+          {board?.sprint.name}
+        </Label>
+      );
+    }
   };
 
   const getDueDate = () => {
@@ -263,6 +276,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           value={newTitle}
           transparent={true}
         />
+        {getAssignedSprint()}
         {getCompleteTask()}
       </Modal.Header>
       <Modal.Content>

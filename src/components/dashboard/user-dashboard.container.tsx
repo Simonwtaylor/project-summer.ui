@@ -29,6 +29,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
       socket.emit('joinUserDashboardRoom');
       socket.emit('getUserDashboard');
       socket.on('userDashboard', ({ tasks }: { tasks: ITask[] }) => {
+        console.log(tasks);
         setUserTasks(tasks);
         setLoaded(true);
       });
@@ -68,15 +69,15 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
     setShowTaskModal(true);
   };
 
-  const getTaskModal = () => {
+  const getTaskModal = (taskId?: number, sprintId?: number) => {
     if (showTaskModal) {
       return (
         <TaskModalContainer
-          id={+currentUser?.currentTask.id}
+          id={taskId || +currentUser?.currentTask.id}
           socket={socket}
           onClose={handleTaskModalClose}
           locationOnClose={'/home'}
-          sprintId={currentUser?.currentTask.sprintId}
+          sprintId={sprintId || currentUser?.currentTask.sprintId}
         />
       );
     }
@@ -117,6 +118,11 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
     );
   };
 
+  const handleUserTaskClick = (taskId: number, sprintId: number) => {
+    setShowTaskModal(true);
+    getTaskModal(taskId, sprintId);
+  };
+
   if (loaded) {
     return (
       <div className={'user dashboard'}>
@@ -139,7 +145,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
           <Grid.Row columns={1}>
             <Grid.Column>
               <h4><span role="img">🎯</span> Assigned Tasks</h4>
-              <TaskList tasks={userTasks} />
+              <TaskList tasks={userTasks} onTaskClick={handleUserTaskClick} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
