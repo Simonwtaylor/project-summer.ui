@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { ITask } from '../../lib';
-import { Grid, Icon, Input, Popup, Label } from 'semantic-ui-react';
+import { Grid, Input } from 'semantic-ui-react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import TaskCard from '../task/task-card.component'
 
@@ -45,6 +45,22 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
 
     return <></>;
   };
+  
+  const getEmoji = (name: string) => {
+    const styles = {
+      marginRight: '7px',
+      fontSize: '1.2rem',
+    };
+
+    switch (name) {
+      case "Backlog":
+        return <span style={styles}>🗃</span>;
+      case "In Progress":
+        return <span style={styles}>🔥</span>;
+      case "Completed":
+        return <span style={styles}>🎉</span>;
+    }
+  };
 
   const onSaveClick = () => {
     onAddNewTask(newTaskTitle, +droppableId);
@@ -58,91 +74,6 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
   }
 
   const getColumnActions = () => {
-    if (!newTask) {
-      return (
-        <Popup
-          content={`Add task to ${name}`}
-          key={`addtasktosprint${name}`}
-          trigger={
-            <Icon
-              name={'plus'}
-              style={{
-                cursor: 'pointer',
-                color: 'green',
-                marginLeft: '10px',
-              }}
-              onClick={() => setNewTask(!newTask)}
-            />
-          }
-        />
-      )
-    }
-
-    return (
-      <>
-        <Popup
-          content={`Save task to ${name}`}
-          key={`savetasktosprint${name}`}
-          trigger={
-            <Icon
-              name={'save'}
-              style={{
-                cursor: 'pointer',
-                color: 'green',
-                marginLeft: '10px'
-              }}
-              onClick={onSaveClick}
-            />
-          }
-        />
-        <Popup
-          content={`Cancel`}
-          key={`canceltasktosprint${name}`}
-          trigger={
-            <Icon
-              name={'cancel'}
-              style={{
-                cursor: 'pointer',
-                color: 'red',
-                marginLeft: '10px'
-              }}
-              onClick={onCancelClick}
-            />
-          }
-        />
-      </>
-    )
-  };
-
-  const getColumnTags = () => {
-    let points = 0;
-
-    items
-        .filter(a => !a.completed)
-        .forEach((task: ITask) => points += task.storyPoints || 0);
-
-    return (
-      <>
-        <Popup
-          content={`${items.length} task(s) in ${name}`}
-          key={`numberoftasksin${name}`}
-          trigger={
-            <Label as='a' color='orange'>
-              {items.length}
-            </Label>
-          }
-        />
-        <Popup
-          content={`${points} point(s) in ${name}`}
-          key={`numberofpointsin${name}`}
-          trigger={
-            <Label as='a' color='teal'>
-              {points}
-            </Label>
-          }
-        />
-      </>
-    )
   };
 
   return (
@@ -156,14 +87,13 @@ const BoardColumn: React.FC<IBoardColumnProps> = ({
         <span
           style={{
             paddingLeft: '8px',
-            color: 'white',
             fontSize: '1.3em',
           }}
         >
+          {getEmoji(name)}
           <b>{name}</b>
         </span>
         {getColumnActions()}
-        {getColumnTags()}
       </div>
       {getNewTaskInput()}
       <Droppable droppableId={droppableId}>

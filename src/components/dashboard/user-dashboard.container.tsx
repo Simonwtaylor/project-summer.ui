@@ -5,13 +5,15 @@ import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../redux/index';
 import CurrentTaskDropdown from '../dropdowns/current-task-dropdown.container';
 import { Grid, Icon, Label, Image } from 'semantic-ui-react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-export interface IUserDashboardContainerProps {
+export interface IUserDashboardContainerProps extends RouteComponentProps<any>  {
   socket?: SocketIOClient.Socket;
 }
  
 const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
   socket,
+  history,
 }) => {
   const currentUser = useSelector(selectCurrentUser);
   const [userTasks, setUserTasks] = React.useState<any[]>([]);
@@ -120,8 +122,16 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
 
   const handleUserTaskClick = (taskId: number, sprintId: number) => {
     setShowTaskModal(true);
-    getTaskModal(taskId, sprintId);
+    history.push(`sprint/${taskId}`);
   };
+
+  const getWidth = () => {
+    if (currentUser && currentUser?.currentTask?.id) {
+      return 2;
+    }
+    
+    return 4;
+  }
 
   if (loaded) {
     return (
@@ -132,7 +142,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
               {getUserProfile()}
               <span className={'greeting'}>Welcome {currentUser.displayName},</span>
             </Grid.Column>
-            <Grid.Column width={currentUser?.currentTask?.id ? 2 : 4}>
+            <Grid.Column width={getWidth()}>
               {getCurrentTask()}
             </Grid.Column>
           </Grid.Row>
@@ -159,4 +169,4 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
   );
 }
  
-export default UserDashboardContainer;
+export default withRouter(UserDashboardContainer);

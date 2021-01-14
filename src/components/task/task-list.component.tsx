@@ -15,7 +15,7 @@ const taskList: React.FC<TaskListProps> = ({
   return (
     <>
       <div className={'task list'}>
-        <Table selectable={true} basic='very' style={{ color: 'white' }}>
+        <Table selectable={true} basic='very' style={{ }}>
           <Table.Header style={{ color: 'white' }}>
             <Table.Row>
               <Table.HeaderCell>Title</Table.HeaderCell>

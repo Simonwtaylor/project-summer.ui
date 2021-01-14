@@ -172,12 +172,8 @@ class App extends Component<any, any> {
                   </Grid.Row>
                   <Grid.Row columns={1}>
                     <Grid.Column>
-                      <Sidebar.Pusher
-                        style={{
-                          backgroundColor: '#36393f',
-                        }}
-                      >
-                        <Grid style={{ backgroundColor: '#36393f'}}>
+                      <Sidebar.Pusher>
+                        <Grid>
                           <Grid.Row>
                             <Grid.Column>
                               <Switch>

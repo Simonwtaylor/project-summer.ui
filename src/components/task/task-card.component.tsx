@@ -28,7 +28,8 @@ const TaskCard: React.FC<ITaskCardProps> = ({
     userSelect: 'none',
     padding: 8 * 2,
     margin: `0 0 ${8}px 0`,
-    background: isDragging ? '#008592' : '',
+    background: isDragging ? '' : '',
+    border: isDragging ? '1px solid lightblue' : '',
     ...draggableStyle,
   });
 

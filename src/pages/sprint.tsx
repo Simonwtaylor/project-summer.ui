@@ -4,6 +4,7 @@ import { selectCurrentSprint } from '../redux/index';
 import { Grid } from 'semantic-ui-react';
 import { SprintBoard } from '../components/sprint';
 import { ROUTER_ENUMS } from '../lib/enums';
+import { ITask } from '../lib';
 
 export interface ISprintPageProps {
   socket?: SocketIOClient.Socket;
@@ -23,7 +24,7 @@ const SprintPage: React.FC<ISprintPageProps> = ({
         <Grid.Row>
           <Grid.Column>
             <h3
-              style={{ color: 'white', textAlign: 'center', margin: '30px' }}
+              style={{ textAlign: 'center', margin: '30px' }}
             >
               Please select a sprint
             </h3>

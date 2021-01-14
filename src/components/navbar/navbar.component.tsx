@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({
           circular={true}
           size={'tiny'}
           style={{
-            width: '35px',
+            width: '23px',
             display: 'inline-block',
             marginLeft: '7px',
           }}
@@ -45,7 +45,8 @@ const Navbar: React.FC<NavbarProps> = ({
         backgroundColor: '#2f3136',
         borderRadius: '0px',
         marginBottom: '0',
-        minHeight: '70px',
+        minHeight: '30px',
+        maxHeight: '50px',
       }}
     >
       <Menu.Item

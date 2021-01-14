@@ -135,47 +135,6 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
     return <></>;
   };
 
-  const getDaysLeft = () => {
-    if (currentSprint.endDate) {
-      const { endDate } = currentSprint;
-      const a = new Date();
-      const b = new Date(endDate);
-      const difference = DateService.getDaysDifference(a, b);
-
-      return (
-        <Label as='a' color='blue' icon={true}>
-          <Icon name={'calendar check'} />
-          {difference}
-          <Label.Detail>Days left</Label.Detail>
-        </Label>
-      );
-    }
-
-    return <></>;
-  };
-
-  const calculatePoints = () => {
-    if (!currentSprint) {
-      return <></>;
-    }
-
-    let points = 0;
-
-    currentSprint?.boards.forEach((board: IBoard) => {
-      board.tasks
-        .filter(a => !a.completed)
-        .forEach((task: ITask) => points += task.storyPoints || 0);
-    });
-
-    return (
-      <Label as='a' color='teal' icon={true}>
-        <Icon name={'gamepad'} />
-        {points}
-        <Label.Detail>Points</Label.Detail>
-      </Label>
-    );
-  };
-
   const handleCommentSubmit = (content: string) => {
     socket?.emit('addCommentToSprint', { sprintId, content, uid: currentUser.uid });
   };
@@ -230,36 +189,15 @@ const SprintBoard: React.FC<SprintBoardProps> = ({
           </DragDropContext>
         );
     }
-  }
+  };
 
   return (
     <div 
       style={{
-        padding: '5px',
-        margin: '15px',
+        marginLeft: '10px',
+        marginRight: '10px',
       }}
     >
-      <Grid
-        style={{ padding: '10px 15px' }}
-      >
-        <Grid.Row columns={1}>
-          <Grid.Column width={12}>
-            <span
-              style={{
-                fontFamily: "Lato,'Helvetica Neue',Arial,Helvetica,sans-serif",
-                fontSize: "1.7rem",
-                fontWeight: 700,
-                marginRight: '10px',
-                color: 'white',
-              }}
-            >
-              {currentSprint.name}
-            </span>
-            {getDaysLeft()}
-            {calculatePoints()}
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
       {renderContent()}
     </div>
   );
