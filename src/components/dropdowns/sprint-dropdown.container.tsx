@@ -23,6 +23,10 @@ const SprintDropdownContainer: React.FC<ISprintDropdownContainerProps> = ({
   socket?.emit('getSprints');
 
   socket?.on('sprints', (data: ISprint[]) => {
+    if (data.length === 0) {
+      return <></>;
+    }
+    
     options.splice(0, options.length);
     data.map((sprint: ISprint) => {
       return options.push(

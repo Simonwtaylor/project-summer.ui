@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Input, Popup, Image, Grid, Icon, Label } from 'semantic-ui-react';
 import { UserDropdownContainer } from '../dropdowns';
 import { IUser, IComment, IBoard } from '../../lib';
@@ -51,33 +51,34 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   onCompleteChange,
   onDueDateChange,
 }) => {
-  const [desc, setDescription] = React.useState(description);
-  const [newTitle, setNewTitle] = React.useState(title);
-  const [newStoryPoints, setNewStoryPoints] = React.useState(storyPoints);
-  const [showDueDate, setShowDueDate] = React.useState(false);
-  const [newDueDate, setNewDueDate] = React.useState<moment.Moment|null>(
+  const [desc, setDescription] = useState(description);
+  const [newTitle, setNewTitle] = useState(title);
+  const [newStoryPoints, setNewStoryPoints] = useState(storyPoints);
+  const [showDueDate, setShowDueDate] = useState(false);
+  const [newDueDate, setNewDueDate] = useState<moment.Moment|null>(
     (dueDate) ? moment(dueDate) : null,
   );
+  const [showPoints, setShowPoints] = useState(false);
 
-  const [descFocus, setDescFocus] = React.useState<boolean>(false);
-  const [titleFocus, setTitleFocus] = React.useState<boolean>(false);
-  const [storyFocus, setStoryFocus] = React.useState<boolean>(false);
-  const [changeUser, setChangeUser] = React.useState<boolean>(false);
-  const [dueDateFocus, setDueDateFocus] = React.useState<boolean>(false);
+  const [descFocus, setDescFocus] = useState<boolean>(false);
+  const [titleFocus, setTitleFocus] = useState<boolean>(false);
+  const [storyFocus, setStoryFocus] = useState<boolean>(false);
+  const [changeUser, setChangeUser] = useState<boolean>(false);
+  const [dueDateFocus, setDueDateFocus] = useState<boolean>(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!descFocus) {
       setDescription(description);
     }
   }, [description, descFocus]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!titleFocus) {
       setNewTitle(title);
     }
   }, [title, titleFocus]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!storyFocus) {
       setNewStoryPoints(storyPoints);
     }
@@ -125,8 +126,8 @@ const TaskModal: React.FC<ITaskModalProps> = ({
   const getAssignedSprint = () => {
     if (board?.sprint) {
       return (
-        <Label as='a' image>
-          <Icon name={'lightning'} />
+        <Label as='a' color={'grey'} image>
+          <Icon color={'yellow'} name={'lightning'} />
           {board?.sprint.name}
         </Label>
       );
@@ -152,46 +153,41 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           />
         </div>
       );
-    } else if (dueDate) {
-      return (
-        <Label
-          as='a'
-          color='blue'
-          icon={true}
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowDueDate(!showDueDate)}
-        >
-          <Icon name={'calendar check'} />
-          <Label.Detail>Due {moment(dueDate).fromNow()}</Label.Detail>
-        </Label>
-      );
-    } else {
-      return (
-        <Label
-          as='a'
-          color='blue'
-          icon={true}
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowDueDate(!showDueDate)}
-        >
-          <Icon name={'calendar check'} />
-          <Label.Detail>Set Due Date</Label.Detail>
-        </Label>
-      );
     }
   };
 
   const getDueDateSection = () => {
+    if (!showDueDate) {
+      return <></>;
+    }
+    
     return (
-      <Popup
-        content={'Set Due Date'}
-        key={`setduedatebutton`}
-        trigger={
-          <>
-            {getDueDate()}
-          </>
-        }
-      />
+      <Grid.Column>
+        {getDueDate()}
+      </Grid.Column>
+    );
+  };
+
+  const getStoryPointsInput = () => {
+    if (!showPoints) {
+      return <></>;
+    }
+
+    return (
+      <Grid.Column>
+        <label>Story Points</label>
+        <Input
+          value={newStoryPoints}
+          onChange={handleStoryPointsChange}
+          onFocus={() => setStoryFocus(true)}
+          onBlur={() => setStoryFocus(false)}
+          placeholder={'Story Points'}
+          type={'number'}
+          style={{ width: '100%' }}
+          icon='gamepad'
+          iconPosition='left'
+        />
+      </Grid.Column>
     );
   };
 
@@ -235,7 +231,80 @@ const TaskModal: React.FC<ITaskModalProps> = ({
         }
       />
     );
-  }
+  };
+
+  const calculatePoints = () => {
+    return (
+      <Popup
+        content={'Click to change points'}
+        key={`pointsleftsprinticon`}
+        trigger={
+          <Label
+            as='a'
+            color='teal'
+            icon={true}
+            onClick={() => setShowPoints(!showPoints)}
+          >
+            <Icon name={'gamepad'} />
+            {storyPoints || 0}
+          </Label>
+        }
+      />
+    );
+  };
+
+  const getDueDateBadge = () => {
+    if (!dueDate) { 
+      return (
+        <Popup
+          content={'Click to set Due Date'}
+          key={`pointsleftsprinticon`}
+          trigger={
+            <Label
+              as='a'
+              color='blue'
+              icon={true}
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowDueDate(!showDueDate)}
+            >
+              <Icon name={'calendar check'} />
+              <Label.Detail>Due Date</Label.Detail>
+            </Label>
+          }
+        />
+      );
+    }
+
+    return (
+      <Popup
+        content={'Click to change Due Date'}
+        key={`pointsleftsprinticon`}
+        trigger={
+          <Label
+            as='a'
+            color='blue'
+            icon={true}
+            style={{ cursor: 'pointer' }}
+            onClick={() => setShowDueDate(!showDueDate)}
+          >
+            <Icon name={'calendar check'} />
+            <Label.Detail>Due {moment(dueDate).fromNow()}</Label.Detail>
+          </Label>
+        }
+      />
+    );
+  };
+
+  const getDueDatePointSection = () => {
+    if (showPoints || showDueDate) {
+      return (
+        <Grid.Row columns={2}>
+          {getDueDateSection()}
+          {getStoryPointsInput()}
+        </Grid.Row>
+      );
+    }
+  };
 
   return (
     <Modal centered={false} open={true} onClose={() => onModalClose()}>
@@ -277,19 +346,18 @@ const TaskModal: React.FC<ITaskModalProps> = ({
           transparent={true}
         />
         {getAssignedSprint()}
+        {calculatePoints()}
+        {getDueDateBadge()}
         {getCompleteTask()}
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>
           {getUserSection()}
           <Grid>
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                {getDueDateSection()}
-              </Grid.Column>
-            </Grid.Row>
+            {getDueDatePointSection()}
             <Grid.Row columns={2}>
               <Grid.Column>
+                <label>Description</label>
                 <Input
                   value={desc}
                   onChange={handleDescriptionChange}
@@ -301,19 +369,7 @@ const TaskModal: React.FC<ITaskModalProps> = ({
                   iconPosition={'left'}
                 />
               </Grid.Column>
-              <Grid.Column>
-                <Input
-                  value={newStoryPoints}
-                  onChange={handleStoryPointsChange}
-                  onFocus={() => setStoryFocus(true)}
-                  onBlur={() => setStoryFocus(false)}
-                  placeholder={'Story Points'}
-                  type={'number'}
-                  style={{ width: '100%' }}
-                  icon='gamepad'
-                  iconPosition='left'
-                />
-              </Grid.Column>
+              
             </Grid.Row>
           </Grid>
           <Comments

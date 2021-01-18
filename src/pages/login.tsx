@@ -20,7 +20,6 @@ const LoginPage: React.FC<ILoginPageProps> = ({
   return (
     <div
       style={{
-        color: 'white',
         padding: '20px',
       }}
       className='login'

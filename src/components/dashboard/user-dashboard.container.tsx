@@ -113,7 +113,7 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
         onSelectTask={handleCurrentTask}
         socket={socket}
         selectedTask={
-          (Object.keys(currentUser?.currentTask).length > 0) ?
+          (currentUser && Object.keys(currentUser?.currentTask).length > 0) ?
           currentUser?.currentTask : undefined
         }
       />
@@ -153,9 +153,9 @@ const UserDashboardContainer: React.FC<IUserDashboardContainerProps> = ({
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
-            <Grid.Column>
-              <h4><span role="img">🎯</span> Assigned Tasks</h4>
-              <TaskList tasks={userTasks} onTaskClick={handleUserTaskClick} />
+            <Grid.Column className={'table'}>
+              <h3><span role="img">🎯</span> Assigned Tasks</h3>
+              <TaskList tasks={userTasks} socket={socket} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

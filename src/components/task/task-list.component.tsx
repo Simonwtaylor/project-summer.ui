@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { DateService, ITask } from '../../lib';
-import { Icon, Label, Table } from 'semantic-ui-react';
-import moment from 'moment';
+import { ITask } from '../../lib';
+import { Table } from 'semantic-ui-react';
+import TaskListRowContainer from './task-list-row.container';
 
 export interface TaskListProps {
   tasks: ITask[];
-  onTaskClick: (taskId: number, sprintId: number) => void;
+  socket?: SocketIOClient.Socket;
 }
 
 const taskList: React.FC<TaskListProps> = ({
   tasks,
-  onTaskClick,
+  socket,
 }) => {
   return (
     <>
@@ -18,6 +18,7 @@ const taskList: React.FC<TaskListProps> = ({
         <Table selectable={true} basic='very' style={{ }}>
           <Table.Header style={{ color: 'white' }}>
             <Table.Row>
+              <Table.HeaderCell></Table.HeaderCell>
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Due Date</Table.HeaderCell>
               <Table.HeaderCell>Sprint</Table.HeaderCell>
@@ -27,19 +28,7 @@ const taskList: React.FC<TaskListProps> = ({
           <Table.Body>
           {tasks.map((task: ITask) => {
             return (
-              <Table.Row onClick={() => onTaskClick(+task.id, task.board?.sprintId || 0)} key={`userdashboardtask${task.id}`}>
-                <Table.Cell>{task.title}</Table.Cell>
-                <Table.Cell>{(task.dueDate) ? moment(task.dueDate).fromNow() : ''}</Table.Cell>
-                <Table.Cell>
-                  {(task.board?.sprint) ? 
-                    (<Label as='a' color={'grey'} image>
-                      <Icon color={'yellow'} name={'lightning'} />
-                      {task.board?.sprint.name}
-                    </Label>
-                    ) : ''}
-                </Table.Cell>
-                <Table.Cell>{task.storyPoints}</Table.Cell>
-              </Table.Row>
+              <TaskListRowContainer task={task} socket={socket} />
             );
           })}
           </Table.Body>

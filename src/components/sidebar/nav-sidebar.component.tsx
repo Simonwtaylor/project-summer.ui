@@ -63,6 +63,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
       sprintId: currentSprint.id,
       boardId: currentSprint.boards.find((a: any) => a.name === "Backlog").id,
     });
+    onSprintSectionChange(SPRINT);
   };
 
   const getDaysLeft = () => {
@@ -134,7 +135,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
             <span
               style={{
                 marginLeft: '10px',
-                fontSize: '1.2rem'
+                fontSize: '1rem'
               }}
             >
               🚀
@@ -142,7 +143,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
             <span
               style={{
                 marginLeft: '5px',
-                fontSize: '1.2rem'
+                fontSize: '1rem'
               }}
             >
               <b>{currentSprint.name}</b>
@@ -161,7 +162,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
                 <Icon
                   name={'exchange'}
                   style={{ 
-                    fontSize: '1.2em',
+                    fontSize: '1em',
                     marginRight: '10px',
                     cursor: 'pointer'
                   }}
@@ -176,7 +177,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
 
     return (
       <div style={{ marginTop: '10px' }}>
-        <span style={{ fontSize: '1.2rem' }}>Sprint</span>
+        <span style={{ fontSize: '1rem' }}>Sprint</span>
       </div>
     );
   };
@@ -198,7 +199,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           }}
         >
           <Icon
-            style={{ fontSize: '1.2em'}}
+            style={{ fontSize: '1em'}}
             name='columns'
             size={'small'}
           />
@@ -213,7 +214,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           }}
         >
           <Icon
-            style={{ fontSize: '1.2em'}}
+            style={{ fontSize: '1em'}}
             name='history'
             size={'small'}
           />
@@ -228,7 +229,7 @@ const NavSidebar: React.FC<INavSidebarProps> = ({
           }}
         >
           <Icon
-            style={{ fontSize: '1.2em'}}
+            style={{ fontSize: '1em'}}
             name='chat'
             size={'small'}
           />

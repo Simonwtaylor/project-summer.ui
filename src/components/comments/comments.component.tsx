@@ -22,9 +22,7 @@ const Comments: React.FC<ICommentsProps> = ({
 	};
 
 	return (
-		<Comment.Group
-			style={{ padding: '15px' }}
-		>
+		<Comment.Group>
 			<Header
 				as='h3'
 				dividing

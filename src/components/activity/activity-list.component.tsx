@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, Header, Icon, Image, Popup } from 'semantic-ui-react';
 import moment from 'moment';
+import { IActivity } from '../../lib';
 
 export interface IActivityListProps {
 	activities: any[];
@@ -11,6 +12,10 @@ const ActivityList: React.FC<IActivityListProps> = ({
 	activities,
 	colourClass,
 }) => {
+	const sortedActivities = activities.sort((a: any, b: any) => {
+		return Date.parse(b.dateAdded)-Date.parse(a.dateAdded);
+	});
+
 	return (
 		<div
 			className={'activities'}
@@ -25,7 +30,7 @@ const ActivityList: React.FC<IActivityListProps> = ({
 			>
 				Activities
 			</Header>
-			{activities.map(
+			{sortedActivities.map(
 				(activity) => {
 					return (
 						<Card>
