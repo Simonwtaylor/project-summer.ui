@@ -11,7 +11,7 @@
     "firebase": "^7.14.4",
     "moment": "^2.26.0",
     "node-sass": "^4.14.1",
-    "postcss": "^8.2.4",
+    "postcss": "^8.2.10",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-dates": "^21.8.0",
